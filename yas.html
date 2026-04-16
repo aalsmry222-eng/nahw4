@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>تحدي العدد 113 سؤال | مستر أحمد السمرى</title>
+    
+    <!-- PWA Essentials -->
+    <link rel="manifest" href="data:application/manifest+json,{name:'تحدي العدد - مستر أحمد السمرى',short_name:'تحدي العدد',description:'لعبة تعليمية في قواعد العدد والمعدود',start_url:'.',display:'standalone',orientation:'portrait',background_color:'%230f1a2a',theme_color:'%23D4AF37',icons:[{src:'https://i.ibb.co/wNzXD83n/1775910767553.png',sizes:'512x512',type:'image/png'}]}">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/wNzXD83n/1775910767553.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#D4AF37">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700&display=swap');
+        :root{--gold:#D4AF37;--blue:#0f1a2a;--white:#fff;--green:#2ecc71;--red:#e74c3c;--heart:#ff4d4d;--dark:rgba(0,0,0,0.5);}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{
+            font-family:'Cairo',sans-serif;
+            background:linear-gradient(145deg, #0a111f 0%, #0f1a2a 100%);
+            color:var(--white);
+            text-align:center;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            padding:10px;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            touch-action: pan-y;
+        }
+        .logo-container{text-align:center;margin-bottom:10px}
+        .logo{
+            width:170px;
+            height:170px;
+            border-radius:50%;
+            border:5px solid var(--gold);
+            object-fit:cover;
+            box-shadow:0 0 30px var(--gold);
+            margin-bottom:8px;
+        }
+        .designer-name{
+            font-family:'Amiri',serif;
+            font-size:42px;
+            font-weight:bold;
+            background:linear-gradient(135deg, #f9d423 0%, #fdaa33 50%, #D4AF37 100%);
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
+            text-shadow:0 0 15px #b8860b, 2px 2px 4px #000;
+            margin:10px 0 5px;
+            letter-spacing:2px;
+        }
+        .box{
+            max-width:800px;
+            width:100%;
+            margin:auto;
+            background:rgba(255,255,255,0.03);
+            border:2px solid var(--gold);
+            border-radius:24px;
+            padding:25px 20px;
+            backdrop-filter:blur(4px);
+            box-shadow:0 10px 30px rgba(0,0,0,0.7);
+        }
+        .btn{
+            background:var(--gold);
+            border:none;
+            padding:16px 22px;
+            font-size:20px;
+            font-weight:bold;
+            border-radius:40px;
+            cursor:pointer;
+            color:var(--blue);
+            transition:0.2s;
+            box-shadow:0 4px 8px rgba(0,0,0,0.3);
+            border:1px solid #ffe28c;
+            margin:5px;
+        }
+        .btn:hover{transform:scale(1.02);background:#e5b83b;}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+        .btn.small{padding:12px 18px;font-size:16px;}
+        .opt{
+            background:rgba(255,255,255,0.08);
+            border:1.5px solid var(--gold);
+            padding:18px 16px;
+            margin-top:14px;
+            width:100%;
+            border-radius:14px;
+            color:white;
+            font-size:18px;
+            text-align:center;
+            transition:0.2s;
+            cursor:pointer;
+        }
+        .opt:hover:not(:disabled){background:rgba(255,215,0,0.15);}
+        .opt.correct{background:var(--green)!important;border-color:white}
+        .opt.wrong{background:var(--red)!important;border-color:white}
+        .stats{
+            display:flex;
+            justify-content:space-between;
+            color:var(--gold);
+            font-weight:bold;
+            font-size:18px;
+            margin-bottom:10px;
+            flex-wrap:wrap;
+            gap:5px;
+        }
+        .lives{
+            display:flex;
+            align-items:center;
+            gap:6px;
+        }
+        .timer-box{
+            background:rgba(0,0,0,0.4);
+            padding:6px 14px;
+            border-radius:30px;
+            border:1px solid var(--gold);
+            font-weight:bold;
+        }
+        .progress{
+            height:12px;
+            background:#1e2f44;
+            border-radius:10px;
+            margin:15px 0;
+            overflow:hidden;
+        }
+        .bar{height:100%;background:var(--gold);width:0%}
+        #q{margin:15px 0;line-height:1.6;min-height:70px;font-size:20px;font-weight:600;}
+        #msg{min-height:50px;margin:20px 0;font-weight:bold;font-size:19px}
+        #tf-container{display:flex;gap:15px;justify-content:center;margin:20px 0}
+        .tf-btn{
+            flex:1;
+            padding:20px 16px;
+            font-size:22px;
+            font-weight:bold;
+            border-radius:50px;
+            border:none;
+            cursor:pointer;
+            background:#2c3e50;
+            color:white;
+            border:2px solid var(--gold);
+        }
+        footer{margin-top:25px;padding:15px;border-top:1px solid var(--gold);color:#ccc;font-size:16px;}
+        #end h2{color:var(--gold)}
+        #stars{font-size:28px;margin:15px 0}
+        #countdown-screen{
+            position:fixed;top:0;left:0;right:0;bottom:0;
+            background:var(--blue);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:1000;
+        }
+        .countdown-number{
+            font-size:180px;
+            font-weight:bold;
+            color:var(--gold);
+            text-shadow:0 0 50px gold;
+            animation:pulse 1s infinite;
+        }
+        @keyframes pulse{0%{opacity:0.7;transform:scale(0.9)}50%{opacity:1;transform:scale(1.1)}100%{opacity:0.7;transform:scale(0.9)}}
+        .checkbox-label{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:10px;
+            margin:15px 0;
+            font-size:18px;
+        }
+        .checkbox-label input{width:20px;height:20px;accent-color:var(--gold);}
+        #timerDisplay{font-size:24px;margin:5px 0;}
+        .difficulty-select{display:flex;gap:10px;justify-content:center;margin:10px 0;}
+        .difficulty-btn{padding:10px 18px;border-radius:20px;background:#2c3e50;color:white;border:1px solid var(--gold);cursor:pointer;}
+        .difficulty-btn.active{background:var(--gold);color:var(--blue);}
+        .teacher-panel{
+            max-height:70vh;
+            overflow-y:auto;
+            text-align:right;
+            background:rgba(0,0,0,0.7);
+            padding:15px;
+            border-radius:16px;
+            margin-top:15px;
+        }
+        .teacher-panel p{border-bottom:1px solid #444;padding:8px 0;}
+        .hall-of-fame{background:rgba(0,0,0,0.5);border-radius:16px;padding:10px;margin:15px 0;}
+        .skip-btn{background:#ff9800;border-color:#ffb74d;}
+        
+        /* نافذة الصورة المنبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            max-width: 95%;
+            max-height: 95%;
+            border: 4px solid var(--gold);
+            border-radius: 20px;
+            box-shadow: 0 0 40px gold;
+        }
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--gold);
+            font-size: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .close-modal:hover { color: #fff; text-shadow: 0 0 20px gold; }
+    </style>
+</head>
+<body>
+
+<div class="logo-container">
+    <img class="logo" src="https://i.ibb.co/wNzXD83n/1775910767553.png" alt="شعار مستر أحمد السمرى">
+    <div class="designer-name">تصميم الأستاذ أحمد السمرى</div>
+</div>
+
+<div class="box">
+    <!-- شاشة البداية -->
+    <div id="start">
+        <h2>📖 تحدي العدد في القرآن واللغة</h2>
+        <p style="font-size:18px;margin:10px 0">113 سؤالاً - الأضواء والامتحان للصف الثاني الإعدادي</p>
+        <p style="color:var(--gold);font-weight:bold;margin-bottom:15px">مستر أحمد السمرى</p>
+        
+        <!-- زر مراجعة القواعد -->
+        <button class="btn small" style="background:#2c3e50; color:white;" onclick="openRulesModal()">📚 مراجعة قواعد العدد</button>
+        
+        <!-- خيارات البدء -->
+        <div class="checkbox-label">
+            <input type="checkbox" id="timerCheckbox">
+            <label for="timerCheckbox">⏱️ تفعيل المؤقت الزمني</label>
+        </div>
+        <div id="difficultyContainer" style="display:none;">
+            <p style="margin:5px 0">اختر مستوى الصعوبة:</p>
+            <div class="difficulty-select">
+                <button class="difficulty-btn active" data-time="30">سهل (30ث)</button>
+                <button class="difficulty-btn" data-time="20">متوسط (20ث)</button>
+                <button class="difficulty-btn" data-time="10">صعب (10ث)</button>
+            </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:15px;">
+            <button class="btn" onclick="startCountdown()">ابدأ التحدي 🚀</button>
+            <button class="btn small" onclick="shuffleQuestions()">🔀 خلط الأسئلة</button>
+        </div>
+        <button class="btn small" style="background:#3a4a5a;color:white;" onclick="toggleTeacherPanel()">📋 وضع المراجعة (المعلم)</button>
+        
+        <!-- لوحة الشرف -->
+        <div class="hall-of-fame" id="hallOfFame">
+            <span style="color:var(--gold);">🏆 أعلى نتيجة: </span>
+            <span id="bestScoreDisplay">0</span>
+        </div>
+        
+        <!-- لوحة المعلم المخفية -->
+        <div id="teacherPanel" style="display:none;" class="teacher-panel"></div>
+    </div>
+
+    <!-- شاشة اللعبة -->
+    <div id="game" style="display:none">
+        <div class="stats">
+            <span>📌 سؤال: <span id="qnum">1</span>/<span id="totalQ">113</span></span>
+            <div class="lives">
+                <span>❤️</span>
+                <span id="heartsDisplay">❤️❤️❤️</span>
+            </div>
+            <span>⭐ نقاط: <span id="score">0</span></span>
+        </div>
+        <div id="timerContainer" style="display:none; margin:10px 0;">
+            <div style="display:flex; justify-content:space-between;">
+                <span>⏳ الوقت المتبقي:</span>
+                <span id="timerDisplay" class="timer-box">20</span>
+            </div>
+            <div class="progress" style="height:8px;"><div id="timerBar" class="bar" style="width:100%; background:#3498db;"></div></div>
+        </div>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <h3 id="q"></h3>
+        <div id="opts"></div>
+        <div id="tf-container" style="display:none">
+            <button class="tf-btn" id="btnTrue" onclick="checkTF(true)">✅ صواب</button>
+            <button class="tf-btn" id="btnFalse" onclick="checkTF(false)">❌ خطأ</button>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:15px;">
+            <button class="btn small skip-btn" id="skipBtn" onclick="skipQuestion()">⏭️ تخطي (يستهلك ❤️)</button>
+        </div>
+        <p id="msg"></p>
+    </div>
+
+    <!-- شاشة النهاية -->
+    <div id="end" style="display:none">
+        <h2>🏁 انتهى التحدي</h2>
+        <p style="font-size:22px">نتيجتك: <span id="final" style="color:var(--gold)"></span></p>
+        <div id="stars"></div>
+        <button class="btn" onclick="resetToStart()">🔄 العب مجدداً</button>
+    </div>
+</div>
+
+<!-- نافذة عرض صورة القواعد -->
+<div id="rulesModal" class="modal" onclick="closeRulesModal()">
+    <span class="close-modal" onclick="closeRulesModal()">&times;</span>
+    <img class="modal-content" id="rulesImage" src="https://i.ibb.co/9H8TDcQd/1997.jpg" alt="قواعد العدد">
+</div>
+
+<footer>تم التطوير بواسطة: مستر أحمد السمرى © 2025</footer>
+
+<script>
+// ========== بنك الأسئلة النهائي (113 سؤالاً) ==========
+const originalQuestions = [
+    {type:'mcq',q:"العدد (19) يكتب هكذا مع كلمة (طالباً):",o:["تسعة عشر طالباً","تسع عشرة طالباً","تسعة عشرة طالباً","تسع عشر طالباً"],a:0},
+    {type:'tf',q:"العدد (80) يعرب إعراب جمع المذكر السالم. (صواب أم خطأ)",a:!0,exp:"صواب؛ ألفاظ العقود ترفع بالواو وتنصب وتجر بالياء."},
+    {type:'mcq',q:"تمييز العدد (ألف) في قولنا: 'قرأت ألف كتابٍ' هو:",o:["كتابٍ (مجرور)","كتاباً (منصوب)","كتابُ (مرفوع)","كتبٍ (جمع مجرور)"],a:0},
+    {type:'tf',q:"العدد (5) يخالف المعدود في التذكير والتأنيث. (صواب أم خطأ)",a:!0,exp:"صواب؛ نقول: خمسة رجال، خمس نساء."},
+    {type:'mcq',q:"ما إعراب كلمة (رجلٍ) في: 'جاء ثلاثةُ رجالٍ'؟",o:["تمييز مجرور","مضاف إليه مجرور","فاعل مرفوع","مفعول به منصوب"],a:1},
+    {type:'mcq',q:"الصيغة الصحيحة للعدد (14) مع (قصة):",o:["أربع عشرة قصةً","أربعة عشر قصةً","أربع عشر قصةً","أربعة عشرة قصةً"],a:0},
+    {type:'tf',q:"العدد (100) تمييزه مفرد مجرور. (صواب أم خطأ)",a:!0,exp:"صواب؛ نقول: مئةُ كتابٍ."},
+    {type:'mcq',q:"'في المكتبة 70 روايةً'. العدد (70) يُعرب:",o:["فاعل مرفوع بالواو","مفعول به منصوب بالياء","مبتدأ مرفوع بالواو","خبر مرفوع بالواو"],a:0},
+    {type:'tf',q:"العددان (1،2) يطابقان المعدود دائماً. (صواب أم خطأ)",a:!0,exp:"صواب؛ واحد واثنان يوافقان المعدود."},
+    {type:'mcq',q:"قال تعالى: (وَلَبِثُوا فِي كَهْفِهِمْ ثَلَاثَ مِائَةٍ سِنِينَ). ما إعراب (سِنِينَ)؟",o:["مضاف إليه مجرور","تمييز منصوب","بدل","مفعول فيه"],a:0},
+    {type:'tf',q:"حلَّقت في السماء إحدى عشرة طائرة. ما تحته خط: مرفوع بالضمة المقدرة. (صواب أم خطأ)",a:!0,exp:"صواب؛ العدد مبني على فتح الجزأين في محل رفع، والضمة مقدرة على آخره."},
+    {type:'tf',q:"«عواقب ...... طالباً على تقصيرهم». العدد المناسب للفراغ: اثنان عشر. (صواب أم خطأ)",a:!1,exp:"خطأ؛ الصواب: اثنا عشر (لأن المعدود مذكر)."},
+    {type:'tf',q:"كرَّمتُ خمسة عشر فائزاً. ما تحته خط: عدد مبني على فتح الجزأين في محل نصب مفعول به. (صواب أم خطأ)",a:!0,exp:"صواب؛ العدد مبني على فتح الجزأين في محل نصب مفعول به."},
+    {type:'tf',q:"العددان (واحد واثنان) لا يحتاجان إلى تمييز. (صواب أم خطأ)",a:!0,exp:"صواب؛ يكتفى بالمعدود."},
+    {type:'tf',q:"الأعداد من (3 إلى 10) تمييزها جمع مجرور. (صواب أم خطأ)",a:!0,exp:"صواب؛ تمييز الأعداد (3-10) جمع مجرور بالإضافة."},
+    {type:'tf',q:"ألفاظ العقود (20-90) تأتي بصيغة واحدة مع المذكر والمؤنث. (صواب أم خطأ)",a:!0,exp:"صواب؛ ألفاظ العقود لا تذكير فيها ولا تأنيث."},
+    {type:'tf',q:"قرأتُ ثلاثةَ كتبٍ. العدد (ثلاثة) معرب. (صواب أم خطأ)",a:!0,exp:"صواب؛ الأعداد من (3-10) معربة إعراب الاسم."},
+    {type:'tf',q:"الصيغة الصحيحة لـ: مررتُ بعشرِ محطاتٍ. التمييز منصوب. (صواب أم خطأ)",a:!1,exp:"خطأ؛ التمييز مجرور بالإضافة (محطاتٍ)."},
+    {type:'mcq',q:"أعطيتُ ...... جائزةً.",o:["ثمانٍ","ثماني","ثمانون","ثمانية"],a:1},
+    {type:'mcq',q:"شاهدتُ ...... مسرحاً.",o:["ثلاثةَ عشرَ","ثلاثَ عشرةَ","ثلاثةَ عشرةَ","ثلاثَ عشرَ"],a:0},
+    {type:'mcq',q:"في المطار ...... مسافرٍ.",o:["مئةُ","مئةَ","مئةٍ","مئاتُ"],a:0},
+    {type:'mcq',q:"في القصة ...... فصلاً.",o:["ستةَ عشرَ","ستَّ عشرةَ","ستةَ عشرةَ","ستَّ عشرَ"],a:0},
+    {type:'mcq',q:"استمعتُ إلى ...... من المذيعاتِ.",o:["ثماني","ثمانٍ","ثمانون","ثمانية"],a:0},
+    {type:'mcq',q:"في السنة ...... شهراً.",o:["اثنا عشرَ","اثنتا عشرةَ","اثني عشرَ","اثنتي عشرةَ"],a:0},
+    {type:'mcq',q:"كافأتِ المديرةُ ...... طالبةً.",o:["الثانيةَ عشرةَ","الثانيَ عشرَ","الثانيةِ عشرةِ","الثانيِ عشرِ"],a:0},
+    {type:'mcq',q:"أكمل بـ: كرّمت اللجنة العلمية ...... طلاب.",o:["أربع","أربعة","أربعاً","أربعةً"],a:1},
+    {type:'mcq',q:"كافأ المعلم ...... من الطلاب.",o:["أربع","أربعة","أربعاً","أربعةً"],a:1},
+    {type:'mcq',q:"أشرف على حفل تكريم الطلاب عشرُ ......",o:["معلمين","معلمات","معلمون","معلماتٍ"],a:1},
+    {type:'mcq',q:"شهدتُ ...... أثراً تاريخياً.",o:["أحدَ عشرَ","إحدى عشرةَ","أحدَ عشرةَ","إحدى عشرَ"],a:0},
+    {type:'mcq',q:"قال تعالى: (فَانفَجَرَتْ مِنْهُ اثْنَتَا عَشْرَةَ عَيْنًا) [البقرة: 60]. كلمة (عَيْنًا) تُعرب:",o:["تمييز منصوب","مفعول به","فاعل","مضاف إليه"],a:0},
+    {type:'mcq',q:"قال تعالى: (سَخَّرَهَا عَلَيْهِمْ سَبْعَ لَيَالٍ وَثَمَانِيَةَ أَيَّامٍ) [الحاقة: 7]. إعراب (لَيَالٍ):",o:["تمييز منصوب","مضاف إليه مجرور","مفعول به","ظرف زمان"],a:0},
+    {type:'mcq',q:"قال تعالى: (إِنَّ عِدَّةَ الشُّهُورِ عِندَ اللَّهِ اثْنَا عَشَرَ شَهْرًا) [التوبة: 36]. (شَهْرًا) تعرب:",o:["تمييز منصوب","مفعول به","خبر إن","مضاف إليه"],a:0},
+    {type:'mcq',q:"قال تعالى: (وَلَبِثُوا فِي كَهْفِهِمْ ثَلَاثَ مِائَةٍ سِنِينَ وَازْدَادُوا تِسْعًا) [الكهف: 25]. ما إعراب (سِنِينَ)؟",o:["تمييز منصوب","مضاف إليه مجرور","بدل","مفعول فيه"],a:1},
+    {type:'mcq',q:"قال تعالى: (وَوَاعَدْنَا مُوسَىٰ ثَلَاثِينَ لَيْلَةً وَأَتْمَمْنَاهَا بِعَشْرٍ) [الأعراف: 142]. (لَيْلَةً) تُعرب:",o:["تمييز منصوب","مفعول به ثان","حال","ظرف زمان"],a:0},
+    {type:'tf',q:"في قوله تعالى: (فَلَبِثَ فِيهِمْ أَلْفَ سَنَةٍ إِلَّا خَمْسِينَ عَامًا) [العنكبوت: 14]، كلمة (عامًا) تمييز منصوب. (صواب أم خطأ)",a:!0,exp:"صواب؛ المستثنى بـ (إلا) في كلام تام موجب منصوب، وهو تمييز للخمسين."},
+    {type:'tf',q:"العدد (11) يطابق المعدود في التذكير والتأنيث دائماً. (صواب أم خطأ)",a:!1,exp:"خطأ؛ الجزء الأول (أحد/إحدى) يخالف، والثاني (عشر/عشرة) يطابق."},
+    {type:'tf',q:"في قوله تعالى: (فَإِن كُنَّ نِسَاءً فَوْقَ اثْنَتَيْنِ) [النساء: 11]، كلمة (نساءً) تمييز منصوب. (صواب أم خطأ)",a:!1,exp:"خطأ؛ (نساءً) هنا حال أو مفعول به، والتمييز محذوف تقديره (نفساً)."},
+    {type:'tf',q:"العدد (8) يعامل معاملة الاسم المنقوص في حالة النصب. (صواب أم خطأ)",a:!1,exp:"خطأ؛ يعامل معاملة الاسم المقصور."},
+    {type:'tf',q:"تمييز الأعداد من (3-10) يكون جمعاً مجروراً بالإضافة. (صواب أم خطأ)",a:!0,exp:"صواب؛ تقول: ثلاثةُ رجالٍ، عشرُ بناتٍ."},
+    {type:'mcq',q:"ما الصيغة الصحيحة للعدد (18) مع (قصة)؟",o:["ثماني عشرة قصةً","ثمانية عشر قصةً","ثمان عشرة قصةً","ثماني عشر قصةً"],a:0},
+    {type:'mcq',q:"حضر 30 طالباً. تمييز العدد (30):",o:["مفرد منصوب","جمع مجرور","مفرد مجرور","جمع منصوب"],a:0},
+    {type:'mcq',q:"اشتريت 100 كتابٍ. كلمة (كتابٍ) تُعرب:",o:["تمييز مجرور","مضاف إليه مجرور","تمييز منصوب","مفعول به"],a:0},
+    {type:'mcq',q:"العدد (52) يُكتب هكذا:",o:["اثنان وخمسون","اثنتان وخمسون","اثنين وخمسين","اثنان وخمسين"],a:0},
+    {type:'mcq',q:"ما إعراب كلمة (عاماً) في: (ألف سنة إلا خمسين عاماً)؟",o:["مستثنى منصوب","تمييز منصوب","مفعول به","ظرف زمان"],a:1},
+    {type:'tf',q:"العدد (1) يذكر ويؤنث حسب المعدود. (صواب أم خطأ)",a:!1,exp:"خطأ؛ لا يحتاج لتمييز، بل هو صفة (واحد/واحدة)."},
+    {type:'tf',q:"العدد (1000) تمييزه مفرد منصوب. (صواب أم خطأ)",a:!1,exp:"خطأ؛ تمييز الألف مفرد مجرور (ألفُ كتابٍ)."},
+    {type:'tf',q:"نقول: قرأت تسعَ عشرةَ مقالةً. (صواب أم خطأ)",a:!0,exp:"صواب؛ لأن المعدود مؤنث."},
+    {type:'tf',q:"العدد (13) مبني على فتح الجزأين في محل إعرابي حسب موقعه. (صواب أم خطأ)",a:!0,exp:"صواب؛ نقول: رأيتُ ثلاثةَ عشرَ رجلاً (جزءان مبنيان على الفتح في محل نصب)."},
+    {type:'tf',q:"في قوله تعالى: (إِنِّي رَأَيْتُ أَحَدَ عَشَرَ كَوْكَبًا) [يوسف: 4]، كلمة (كوكبًا) تمييز منصوب. (صواب أم خطأ)",a:!0,exp:"صواب؛ تمييز العدد 11 منصوب."},
+    {type:'mcq',q:"قال تعالى: (وَاخْتَارَ مُوسَىٰ قَوْمَهُ سَبْعِينَ رَجُلًا لِّمِيقَاتِنَا) [الأعراف: 155]. إعراب (رَجُلًا):",o:["تمييز منصوب","مفعول به","حال","مضاف إليه"],a:0},
+    {type:'mcq',q:"قال تعالى: (يَوْمَ يَكُونُ النَّاسُ كَالْفَرَاشِ الْمَبْثُوثِ) ما نوع العدد في الآية؟",o:["لا يوجد عدد","عدد كناية","عدد صريح","عدد ترتيبي"],a:0},
+    {type:'mcq',q:"العدد (200) تمييزه:",o:["مفرد مجرور","مفرد منصوب","جمع مجرور","جمع منصوب"],a:0},
+    {type:'mcq',q:"ما الصيغة الصحيحة للعدد (75) مع كلمة (سيارة)؟",o:["خمس وسبعون سيارةً","خمسة وسبعون سيارةً","خمس وسبعين سيارةً","خمسة وسبعين سيارةً"],a:1},
+    {type:'mcq',q:"العدد (0) حكمه:",o:["لا تمييز له","تمييزه مفرد منصوب","تمييزه جمع مجرور","يذكر ويؤنث"],a:0},
+    {type:'tf',q:"في قوله تعالى: (وَقَطَّعْنَاهُمُ اثْنَتَيْ عَشْرَةَ أَسْبَاطًا) [الأعراف: 160]، التمييز (أسباطًا) جمع تكسير. (صواب أم خطأ)",a:!0,exp:"صواب؛ (أسباطاً) جمع سبط، وهو تمييز منصوب."},
+    {type:'mcq',q:"عندي 999 كتاباً. الصيغة الصحيحة:",o:["تسع مئة وتسعة وتسعون","تسعمئة وتسع وتسعون","تسع مئة وتسع وتسعون","تسعمائة وتسعة وتسعون"],a:0},
+    {type:'tf',q:"العدد (2) يسمى (المثنى) ويغني عن العدد والتمييز. (صواب أم خطأ)",a:!0,exp:"صواب؛ تقول: رجلان اثنان، ولا تحتاج لتمييز."},
+    {type:'mcq',q:"قال تعالى: (لَّقَدْ كَفَرَ الَّذِينَ قَالُوا إِنَّ اللَّهَ ثَالِثُ ثَلَاثَةٍ) [المائدة: 73]. إعراب (ثالثُ):",o:["خبر إن مرفوع","مضاف إليه","صفة","بدل"],a:0},
+    {type:'tf',q:"العدد (1-2) يوافق المعدود، ومن (3-9) يخالفه، ومن (11-99) يخالف جزؤه الأول ويوافقه الثاني. (صواب أم خطأ)",a:!0,exp:"صواب؛ هذه هي القاعدة العامة."},
+    {type:'mcq',q:"الكتابة الصحيحة للعدد (15 طالبةً):",o:["خمسَ عشرةَ طالبةً","خمسةَ عشرَ طالبةً","خمسةَ عشرةَ طالبةً","خمس عشر طالبةً"],a:0},
+    {type:'mcq',q:"ما إعراب كلمة 'حرفًا' في: 'في اللغة العربية ثمانٍ وعشرون حرفًا'؟",o:["تمييز منصوب","مفعول به","خبر","مضاف إليه"],a:0},
+    {type:'mcq',q:"العدد 'عشرون' في جملة 'كتب الشاعرُ عشرون قصيدةً' يُعرب:",o:["فاعل مرفوع بالواو","مفعول به منصوب بالياء","مبتدأ مرفوع بالواو","خبر مرفوع بالواو"],a:0},
+    {type:'mcq',q:"الصيغة الصحيحة لـ: (في الصف 9 طالبات) هي:",o:["في الصَّفِّ تسعُ طالباتٍ","في الصَّفِّ تسعةُ طالباتٍ","في الصَّفِّ تسعةِ طالباتٍ","في الصَّفِّ تسعةَ طالباتٍ"],a:0},
+    {type:'mcq',q:"الصيغة الصحيحة لـ: (قضى التلميذ في تعليمه 16 عامًا) هي:",o:["ستَّةَ عشرَ عامًا","ستَّ عشرَ عامًا","ستَّ عشرةَ عامًا","ستَّةَ عشرةَ عامًا"],a:0},
+    {type:'mcq',q:"تمييز العدد 'مائة' في جملة: 'قرأت كتابًا فيه مائةُ فائدةٍ' هو:",o:["فائدةٍ (مجرور)","فائدةً (منصوب)","فائدةُ (مرفوع)","فوائدَ (جمع)"],a:0},
+    {type:'mcq',q:"الكتابة الصحيحة للعدد (10) مع كلمة (ساعات) في جملة: 'درستُ ... ساعاتٍ' هي:",o:["عشرَ","عشرةَ","عشرُ","عشرةُ"],a:0},
+    {type:'mcq',q:"التشكيل الصحيح للعدد في جملة: 'قرأت ...... قصصٍ' (10 قصص):",o:["عَشْرَ","عَشَرَ","عَشْرَةَ","عَشَرَةَ"],a:0},
+    {type:'mcq',q:"التشكيل الصحيح للعدد في جملة: 'قرأت ...... كتبٍ' (10 كتب):",o:["عَشَرَةَ","عَشَرَ","عَشْرَةَ","عَشْرَ"],a:0},
+    {type:'mcq',q:"حضر إلى المدرسة (7) ضيوف. الصيغة الصحيحة:",o:["سبعةُ ضيوفٍ","سبعُ ضيوفٍ","سبعةَ ضيوفٍ","سبعَ ضيوفٍ"],a:0},
+    {type:'mcq',q:"أكلنا (10) كعكات. الصيغة الصحيحة:",o:["عشرَ كعكاتٍ","عشرةَ كعكاتٍ","عشرُ كعكاتٍ","عشرةُ كعكاتٍ"],a:0},
+    {type:'mcq',q:"عندي أخ (1). الصيغة الصحيحة:",o:["واحدٌ","واحدةٌ","أحدٌ","إحدى"],a:0},
+    {type:'mcq',q:"عندي أختان (2). الصيغة الصحيحة:",o:["اثنتان","اثنان","اثنين","اثنتين"],a:0},
+    {type:'mcq',q:"في مكتبتي (15) كتابًا. الصيغة الصحيحة:",o:["خمسةَ عشرَ","خمسَ عشرةَ","خمسةَ عشرةَ","خمسَ عشرَ"],a:0},
+    {type:'mcq',q:"في مدرستنا (25) معلمًا. الصيغة الصحيحة:",o:["خمسةٌ وعشرون","خمسٌ وعشرون","خمسةً وعشرين","خمسًا وعشرين"],a:0},
+    {type:'mcq',q:"في قريتنا (13) مدرسةً. الصيغة الصحيحة:",o:["ثلاثَ عشرةَ","ثلاثةَ عشرَ","ثلاثَ عشرَ","ثلاثةَ عشرةَ"],a:0},
+    {type:'mcq',q:"معي (99) درهماً. الصيغة الصحيحة:",o:["تسعٌ وتسعون","تسعةٌ وتسعون","تسعاً وتسعين","تسعةً وتسعين"],a:0},
+    {type:'mcq',q:"في مدرستي (354) طالبًا. الصيغة الصحيحة:",o:["ثلاثمئةٍ وأربعةٌ وخمسون","ثلاثمائةٍ وأربعةٌ وخمسون","ثلاثمئةٍ وأربعٌ وخمسون","ثلاثمائةٍ وأربعٌ وخمسون"],a:0},
+    {type:'mcq',q:"نجح (11) طالبًا. الصياغة الصحيحة:",o:["أحدَ عشرَ","إحدى عشرةَ","أحدَ عشرةَ","إحدى عشرَ"],a:0},
+    {type:'mcq',q:"فازت (11) طالبةً. الصياغة الصحيحة:",o:["إحدى عشرةَ","أحدَ عشرَ","إحدى عشرَ","أحدَ عشرةَ"],a:0},
+    {type:'mcq',q:"فاز (12) طالبًا. الصياغة الصحيحة:",o:["اثنا عشرَ","اثنتا عشرةَ","اثني عشرَ","اثنتي عشرةَ"],a:0},
+    {type:'mcq',q:"فازت (12) طالبةً. الصياغة الصحيحة:",o:["اثنتا عشرةَ","اثنا عشرَ","اثنتي عشرةَ","اثني عشرَ"],a:0},
+    {type:'mcq',q:"في الشارع (40) سيارةً. الصياغة الصحيحة:",o:["أربعون سيارةً","أربعين سيارةً","أربعُون سيارةٍ","أربعِين سيارةٍ"],a:0},
+    {type:'mcq',q:"رأيت (20) أسدًا. الصياغة الصحيحة:",o:["عشرين أسدًا","عشرون أسدًا","عشرين أسدٍ","عشرون أسدٍ"],a:0},
+    {type:'tf',q:"العدد (8) إذا كان المعدود مؤنثاً يكتب 'ثماني' (مثل: ثماني طالبات). (صواب أم خطأ)",a:!0,exp:"صواب؛ تقول: ثماني طالباتٍ (بإثبات الياء)."},
+    {type:'tf',q:"العدد 'أحد عشر' يطابق المعدود تذكيراً وتأنيثاً في جزأيه. (صواب أم خطأ)",a:!1,exp:"خطأ؛ جزؤه الأول (أحد/إحدى) يخالف المعدود، والثاني (عشر/عشرة) يطابقه."},
+    {type:'tf',q:"ألفاظ العقود (20-90) تلزم حالة واحدة في الإعراب. (صواب أم خطأ)",a:!1,exp:"خطأ؛ تعرب إعراب جمع المذكر السالم (ترفع بالواو، وتنصب وتجر بالياء)."},
+    {type:'tf',q:"العدد (1000) يعرب حسب موقعه في الجملة. (صواب أم خطأ)",a:!0,exp:"صواب؛ مثل: اشتريتُ ألفَ كتابٍ (مفعول به منصوب)."},
+    {type:'tf',q:"تمييز الأعداد من (11-99) يكون مفرداً منصوباً. (صواب أم خطأ)",a:!0,exp:"صواب؛ نقول: أحد عشر كوكباً."},
+    {type:'tf',q:"العدد (3) يخالف المعدود في التذكير والتأنيث، وتمييزه جمع مجرور. (صواب أم خطأ)",a:!0,exp:"صواب؛ تقول: ثلاثةُ رجالٍ، ثلاثُ طالباتٍ."},
+    {type:'tf',q:"العدد (11) مع كلمة (كوكباً) في القرآن كتب هكذا: (أحدَ عشرَ كوكباً). (صواب أم خطأ)",a:!0,exp:"صواب؛ ورد في سورة يوسف: (إِنِّي رَأَيْتُ أَحَدَ عَشَرَ كَوْكَبًا)."},
+    {type:'mcq',q:"التمييز في جملة: (في المدرسة ثلاثون فصلاً) هو:",o:["فصلاً (منصوب)","فصلٍ (مجرور)","فصلٌ (مرفوع)","فصولاً (جمع)"],a:0},
+    {type:'tf',q:"العدد (7) يخالف المعدود في التذكير والتأنيث. (صواب أم خطأ)",a:!0,exp:"صواب؛ نقول: سبعة رجال، سبع نساء."},
+    {type:'mcq',q:"الصيغة الصحيحة للعدد (80) مع كلمة (سنة) هي:",o:["ثمانون سنةً","ثمانين سنةً","ثمانون سنةٍ","ثمانين سنةٍ"],a:0},
+    {type:'tf',q:"العدد (اثنا عشر) جزؤه الأول يطابق المعدود والثاني يخالفه. (صواب أم خطأ)",a:!1,exp:"خطأ؛ الصحيح: جزؤه الأول يخالف المعدود (اثنا للمذكر، اثنتا للمؤنث) والثاني يطابقه (عشر للمذكر، عشرة للمؤنث)."},
+    {type:'tf',q:"تمييز العدد (100) يكون جمعاً مجروراً. (صواب أم خطأ)",a:!1,exp:"خطأ؛ تمييز المائة مفرد مجرور: مئةُ كتابٍ."},
+    {type:'mcq',q:"العدد (تسع وتسعون) مع المعدود المؤنث يكتب:",o:["تسعٌ وتسعون","تسعةٌ وتسعون","تسعاً وتسعين","تسعةً وتسعين"],a:0},
+    {type:'tf',q:"في جملة (قرأت أحد عشر كتاباً) كلمة (كتاباً) تعرب مفعولاً به. (صواب أم خطأ)",a:!1,exp:"خطأ؛ (كتاباً) تمييز منصوب."},
+    {type:'tf',q:"العدد (خمسة عشر) مبني على فتح الجزأين. (صواب أم خطأ)",a:!0,exp:"صواب؛ الأعداد المركبة من 11 إلى 19 مبنية على فتح الجزأين."},
+    {type:'mcq',q:"الصيغة الصحيحة للعدد (88) مع كلمة (طالب) هي:",o:["ثمانية وثمانون طالباً","ثمان وثمانون طالباً","ثمانية وثمانين طالباً","ثمان وثمانين طالباً"],a:0},
+    {type:'tf',q:"الأعداد من (3 إلى 10) تمييزها مفرد منصوب. (صواب أم خطأ)",a:!1,exp:"خطأ؛ تمييزها جمع مجرور: ثلاثة رجالٍ، ثلاث طالباتٍ."},
+    {type:'tf',q:"العدد (20) يعرب إعراب جمع المذكر السالم. (صواب أم خطأ)",a:!0,exp:"صواب؛ ألفاظ العقود ترفع بالواو وتنصب وتجر بالياء."},
+    {type:'mcq',q:"العدد (12) يكتب هكذا مع المعدود المؤنث:",o:["اثنتا عشرة","اثنا عشر","اثنتي عشرة","اثني عشر"],a:0},
+    {type:'mcq',q:"تمييز العدد (90) في جملة: (في المكتبة تسعون كتاباً) هو:",o:["كتاباً (منصوب)","كتابٍ (مجرور)","كتابٌ (مرفوع)","كتباً (جمع)"],a:0},
+    {type:'tf',q:"العدد (1000) يعرب حسب موقعه في الجملة. (صواب أم خطأ)",a:!0,exp:"صواب؛ مثل: اشتريتُ ألفَ كتابٍ (مفعول به منصوب)."},
+    {type:'mcq',q:"الصيغة الصحيحة للعدد (16) مع كلمة (مدرسة) هي:",o:["ست عشرة مدرسةً","ستة عشر مدرسةً","ستة عشرة مدرسةً","ست عشر مدرسةً"],a:0},
+    {type:'tf',q:"العدد (واحد) يطابق المعدود في التذكير والتأنيث. (صواب أم خطأ)",a:!0,exp:"صواب؛ نقول: واحد رجل، واحدة امرأة."},
+    {type:'tf',q:"في قوله تعالى: (تِلْكَ عَشَرَةٌ كَامِلَةٌ) كلمة (عشرة) تعرب خبراً. (صواب أم خطأ)",a:!0,exp:"صواب؛ (عشرة) خبر مرفوع بالضمة."},
+    {type:'mcq',q:"العدد (50) مع كلمة (قصة) يكتب:",o:["خمسون قصةً","خمسين قصةً","خمسون قصةٍ","خمسين قصةٍ"],a:0},
+    {type:'mcq',q:"العدد (19) مع المعدود المذكر يكتب:",o:["تسعة عشر","تسع عشرة","تسعة عشرة","تسع عشر"],a:0}
+];
+
+let questions = [...originalQuestions];
+let currentQuestions = [];
+let i=0, s=0, answered=false, timer, audioCtx=null;
+let lives = 3;
+let timerEnabled = false;
+let questionTimer, timeLeft, timerInterval;
+let difficultyTime = 20;
+let bestScore = localStorage.getItem('bestScore') ? parseInt(localStorage.getItem('bestScore')) : 0;
+document.getElementById('bestScoreDisplay').innerText = bestScore;
+
+const totalQuestions = () => currentQuestions.length;
+const gameDiv = document.getElementById('game');
+const endDiv = document.getElementById('end');
+const startDiv = document.getElementById('start');
+const heartsDisplay = document.getElementById('heartsDisplay');
+const timerContainer = document.getElementById('timerContainer');
+const timerDisplay = document.getElementById('timerDisplay');
+const timerBar = document.getElementById('timerBar');
+const timerCheckbox = document.getElementById('timerCheckbox');
+const difficultyContainer = document.getElementById('difficultyContainer');
+const totalQSpan = document.getElementById('totalQ');
+
+// Service Worker للتطبيق (يعمل دون اتصال)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register("data:application/javascript,self.addEventListener('install',()=>self.skipWaiting());self.addEventListener('activate',()=>clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))))");
+  });
+}
+
+// الأصوات
+function initAudio(){if(!audioCtx)try{audioCtx=new(window.AudioContext||window.webkitAudioContext)}catch(e){}}
+function playSound(type){
+    try{
+        if(!audioCtx)initAudio();
+        if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
+        if(audioCtx){
+            let osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+            osc.connect(gain);gain.connect(audioCtx.destination);
+            if(type==='correct'){osc.frequency.value=880;gain.gain.setValueAtTime(.3,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.2);osc.start();osc.stop(audioCtx.currentTime+.2)}
+            else if(type==='wrong'){osc.frequency.value=440;gain.gain.setValueAtTime(.3,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.25);osc.start();osc.stop(audioCtx.currentTime+.25)}
+            else if(type==='countdown'){osc.frequency.value=600;gain.gain.setValueAtTime(.2,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.1);osc.start();osc.stop(audioCtx.currentTime+.1)}
+            else if(type==='heart'){osc.frequency.value=330;gain.gain.setValueAtTime(.3,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.3);osc.start();osc.stop(audioCtx.currentTime+.3);}
+            else if(type==='skip'){osc.frequency.value=550;gain.gain.setValueAtTime(.2,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.01,audioCtx.currentTime+.15);osc.start();osc.stop(audioCtx.currentTime+.15);}
+        }
+    }catch(e){}
+}
+
+// خلط الأسئلة
+function shuffleQuestions(){
+    currentQuestions = [...questions];
+    for(let i=currentQuestions.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [currentQuestions[i],currentQuestions[j]]=[currentQuestions[j],currentQuestions[i]];
+    }
+    alert('تم خلط الأسئلة بنجاح!');
+}
+function resetQuestions(){
+    currentQuestions = [...questions];
+}
+
+function updateHearts(){
+    let str='';
+    for(let h=0;h<3;h++) str+=(h<lives)?'❤️':'🖤';
+    heartsDisplay.innerText=str;
+}
+
+function startCountdown(){
+    initAudio();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    if(currentQuestions.length===0) resetQuestions();
+    startDiv.style.display="none";
+    let cd=document.createElement("div");cd.id="countdown-screen";cd.innerHTML='<div class="countdown-number" id="cd-num">3</div>';
+    document.body.appendChild(cd);let num=3;
+    let int=setInterval(()=>{
+        num--;
+        if(num>0){document.getElementById("cd-num").innerText=num;playSound('countdown');}
+        else{clearInterval(int);document.body.removeChild(cd);startGame();}
+    },800);
+}
+
+function startGame(){
+    startDiv.style.display="none"; gameDiv.style.display="block"; endDiv.style.display="none";
+    timerEnabled = timerCheckbox.checked;
+    timerContainer.style.display = timerEnabled?'block':'none';
+    i=0; s=0; lives=3;
+    document.getElementById("score").innerText="0";
+    totalQSpan.innerText = totalQuestions();
+    updateHearts();
+    loadQuestion();
+}
+
+function clearTimers(){
+    if(timer)clearTimeout(timer);
+    if(timerInterval)clearInterval(timerInterval);
+    timer=null; timerInterval=null;
+}
+
+function startQuestionTimer(){
+    if(!timerEnabled)return;
+    timeLeft = difficultyTime;
+    timerDisplay.innerText=timeLeft;
+    timerBar.style.width='100%';
+    timerInterval=setInterval(()=>{
+        timeLeft--;
+        timerDisplay.innerText=timeLeft;
+        timerBar.style.width=(timeLeft/difficultyTime*100)+'%';
+        if(timeLeft<=0){
+            clearInterval(timerInterval);
+            timerInterval=null;
+            if(!answered){
+                answered=true;
+                disableOptions();
+                playSound('wrong');
+                handleWrongAnswer('⏰ انتهى الوقت!', true);
+            }
+        }
+    },1000);
+}
+
+function disableOptions(){
+    document.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+    let bt=document.getElementById("btnTrue"),bf=document.getElementById("btnFalse");
+    if(bt){bt.disabled=true;bf.disabled=true;}
+}
+
+function handleWrongAnswer(msg, fromTimer=false){
+    lives--;
+    playSound('heart');
+    updateHearts();
+    document.getElementById("msg").innerHTML=msg;
+    document.getElementById("msg").style.color="#e74c3c";
+    
+    if(lives<=0){
+        clearTimers();
+        setTimeout(()=>endGame(),1000);
+        return;
+    }
+    clearTimers();
+    timer=setTimeout(()=>{ i++; if(i<totalQuestions()) loadQuestion(); else endGame(); },2000);
+}
+
+function skipQuestion(){
+    if(answered || lives<=0) return;
+    answered=true;
+    clearTimers();
+    disableOptions();
+    playSound('skip');
+    lives--;
+    updateHearts();
+    document.getElementById("msg").innerHTML="⏭️ تم تخطي السؤال. استهلكت قلباً.";
+    document.getElementById("msg").style.color="#ff9800";
+    if(lives<=0){ setTimeout(()=>endGame(),1000); return; }
+    timer=setTimeout(()=>{ i++; if(i<totalQuestions()) loadQuestion(); else endGame(); },1500);
+}
+
+function loadQuestion(){
+    clearTimers();
+    answered=false;
+    let q = currentQuestions[i];
+    document.getElementById("qnum").innerText=i+1;
+    document.getElementById("q").innerText=q.q;
+    document.getElementById("msg").innerHTML="";
+    document.getElementById("bar").style.width=(i/totalQuestions()*100)+"%";
+    let optsDiv=document.getElementById("opts"),tfDiv=document.getElementById("tf-container");
+    if(q.type==='mcq'){
+        optsDiv.style.display="block"; tfDiv.style.display="none"; optsDiv.innerHTML="";
+        q.o.forEach((opt,idx)=>{
+            let btn=document.createElement("button"); btn.className="opt"; btn.innerText=opt;
+            btn.onclick=()=>checkMCQ(idx); optsDiv.appendChild(btn);
+        });
+    }else{
+        optsDiv.style.display="none"; tfDiv.style.display="flex";
+        let bt=document.getElementById("btnTrue"),bf=document.getElementById("btnFalse");
+        bt.disabled=false; bf.disabled=false;
+        bt.classList.remove("correct","wrong"); bf.classList.remove("correct","wrong");
+        bt.style.background="#2c3e50"; bf.style.background="#2c3e50";
+    }
+    startQuestionTimer();
+}
+
+function checkMCQ(sel){
+    if(answered)return;
+    answered=true; clearTimers();
+    let q=currentQuestions[i],isCorrect=(sel===q.a);
+    let allOpts=document.querySelectorAll(".opt");
+    allOpts.forEach(b=>b.disabled=true);
+    allOpts[q.a].classList.add("correct");
+    if(!isCorrect){
+        allOpts[sel].classList.add("wrong");
+        handleWrongAnswer(`❌ إجابة خاطئة. الصواب: ${q.o[q.a]}`, false);
+    }else{
+        s+=5; document.getElementById("score").innerText=s;
+        document.getElementById("msg").innerHTML="🎉✅ إجابة صحيحة! ممتاز!";
+        document.getElementById("msg").style.color="#2ecc71";
+        playSound('correct');
+        timer=setTimeout(()=>{ i++; if(i<totalQuestions()) loadQuestion(); else endGame(); },1800);
+    }
+}
+
+function checkTF(ans){
+    if(answered)return;
+    answered=true; clearTimers();
+    let q=currentQuestions[i],isCorrect=(ans===q.a);
+    let bt=document.getElementById("btnTrue"),bf=document.getElementById("btnFalse");
+    bt.disabled=true; bf.disabled=true;
+    (q.a?bt:bf).classList.add("correct");
+    if(!isCorrect){
+        (ans?bt:bf).classList.add("wrong");
+        handleWrongAnswer(`❌ إجابة خاطئة. ${q.exp||''}`, false);
+    }else{
+        s+=5; document.getElementById("score").innerText=s;
+        document.getElementById("msg").innerHTML=`🎉✅ إجابة صحيحة! ${q.exp||''}`;
+        document.getElementById("msg").style.color="#2ecc71";
+        playSound('correct');
+        timer=setTimeout(()=>{ i++; if(i<totalQuestions()) loadQuestion(); else endGame(); },2200);
+    }
+}
+
+function endGame(){
+    clearTimers();
+    gameDiv.style.display="none"; endDiv.style.display="block";
+    let max=totalQuestions()*5;
+    document.getElementById("final").innerText=`${s} / ${max}`;
+    let p=(s/max)*100;
+    let stars=p>=90?"⭐⭐⭐⭐⭐ ممتاز!":p>=75?"⭐⭐⭐⭐ جيد جداً":p>=60?"⭐⭐⭐ جيد":p>=40?"⭐⭐ مقبول":"⭐ حاول مجدداً";
+    document.getElementById("stars").innerHTML=stars;
+    if(s>bestScore){
+        bestScore=s;
+        localStorage.setItem('bestScore', bestScore);
+        document.getElementById('bestScoreDisplay').innerText=bestScore;
+    }
+}
+
+// إعادة ضبط كاملة للعبة بدون إعادة تحميل الصفحة
+function resetToStart(){
+    clearTimers();
+    gameDiv.style.display = 'none';
+    endDiv.style.display = 'none';
+    startDiv.style.display = 'block';
+    document.getElementById('teacherPanel').style.display = 'none';
+    i=0; s=0; lives=3; answered=false;
+    document.getElementById('score').innerText = '0';
+    updateHearts();
+    currentQuestions = [...questions];
+    totalQSpan.innerText = totalQuestions();
+    document.getElementById('bar').style.width = '0%';
+    document.getElementById('bestScoreDisplay').innerText = bestScore;
+    // إعادة ضبط اختيارات المؤقت والصعوبة للوضع الافتراضي
+    timerCheckbox.checked = false;
+    difficultyContainer.style.display = 'none';
+    document.querySelectorAll('.difficulty-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.difficulty-btn[data-time="20"]').classList.add('active');
+    difficultyTime = 20;
+}
+
+function toggleTeacherPanel(){
+    let panel = document.getElementById('teacherPanel');
+    if(panel.style.display==='none'){
+        let html='<h3>📚 جميع الأسئلة والإجابات (وضع المراجعة)</h3>';
+        questions.forEach((q,idx)=>{
+            html+=`<p><strong>${idx+1}- ${q.q}</strong><br>`;
+            if(q.type==='mcq'){
+                html+=`الخيارات: ${q.o.join(' | ')}<br>✅ الإجابة الصحيحة: ${q.o[q.a]}`;
+            }else{
+                html+=`✅ الإجابة: ${q.a?'صواب':'خطأ'} - ${q.exp||''}`;
+            }
+            html+='</p>';
+        });
+        panel.innerHTML=html;
+        panel.style.display='block';
+    }else{ panel.style.display='none'; }
+}
+
+function openRulesModal() { document.getElementById('rulesModal').style.display = 'flex'; }
+function closeRulesModal() { document.getElementById('rulesModal').style.display = 'none'; }
+
+timerCheckbox.addEventListener('change', ()=>{
+    difficultyContainer.style.display = timerCheckbox.checked?'block':'none';
+});
+document.querySelectorAll('.difficulty-btn').forEach(btn=>{
+    btn.addEventListener('click', function(){
+        document.querySelectorAll('.difficulty-btn').forEach(b=>b.classList.remove('active'));
+        this.classList.add('active');
+        difficultyTime = parseInt(this.dataset.time);
+    });
+});
+window.shuffleQuestions = function(){ shuffleQuestions(); };
+resetQuestions();
+totalQSpan.innerText = totalQuestions();
+</script>
+</body>
+</html>
