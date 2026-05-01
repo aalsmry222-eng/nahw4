@@ -1,0 +1,1178 @@
+<!-- الصق الكود الكامل الموجود في الأسفل داخل الملف -->
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#D4AF37">
+    <meta name="color-scheme" content="dark">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://i.ibb.co; font-src 'self' https://fonts.gstatic.com; media-src 'self';">
+    <title>🐼 تحدي النحو 4 ابتدائي · مستر أحمد السمرى</title>
+
+    <!-- أيقونات (شعار الباندا مضمّن) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐼%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐼%3C/text%3E%3C/svg%3E">
+
+    <!-- بيان PWA (يدعم التثبيت كتطبيق) -->
+    <script>
+        const manifest = {
+            name: 'تحدي النحو 4',
+            short_name: 'نحو 4',
+            start_url: '.',
+            display: 'standalone',
+            background_color: '#0B1120',
+            theme_color: '#D4AF37',
+            icons: [{
+                src: 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 512 512\'%3E%3Ctext y=\'.9em\' font-size=\'460\'%3E🐼%3C/text%3E%3C/svg%3E',
+                sizes: '512x512',
+                type: 'image/svg+xml'
+            }]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        const link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = manifestURL;
+        document.head.appendChild(link);
+    </script>
+
+    <!-- خطوط -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --gold:#D4AF37; --gold-light:#F5D76E; --gold-dark:#9A7B0F;
+            --blue-dark:#0B1120; --blue-card:#111B2D; --blue-lighter:#1A2A44;
+            --green:#2ECC71; --red:#E74C3C; --orange:#F39C12; --pink:#FF80AB;
+            --white:#FFFFFF; --gray:#A0B0C0;
+            --shadow:0 20px 40px rgba(0,0,0,0.5);
+            --border-radius-card:32px;
+            --transition:all 0.25s cubic-bezier(0.2,0,0,1);
+        }
+        body{
+            font-family:'Cairo', sans-serif;
+            background:radial-gradient(circle at top left, #1A2A44, #0B1120);
+            min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+            padding:12px; color:var(--white); direction:rtl;
+            touch-action:pan-y;
+        }
+        /* شاشة البداية Splash */
+        #splashScreen {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:radial-gradient(circle at center, #1A2A44, #0B1120);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            z-index:9999; transition: opacity 0.5s ease-out;
+        }
+        #splashScreen.fade-out { opacity:0; pointer-events:none; }
+        #splashScreen .logo-emoji {
+            font-size: 120px;
+            filter: drop-shadow(0 0 30px var(--gold));
+            line-height: 1;
+        }
+        #splashScreen h2 { color:var(--gold); margin-top:20px; font-family:'Amiri',serif; }
+        /* تأثير confetti */
+        .confetti-container {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            pointer-events:none; z-index:5000;
+        }
+        .confetti-piece {
+            position:absolute; width:8px; height:8px;
+            animation: confetti-fall linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform:translateY(-100px) rotate(0deg); opacity:1; }
+            100% { transform:translateY(100vh) rotate(720deg); opacity:0; }
+        }
+        .game-container{
+            max-width:560px; width:100%; margin:0 auto;
+            background:rgba(17,27,45,0.7); backdrop-filter:blur(20px);
+            border:2px solid var(--gold); border-radius:var(--border-radius-card);
+            padding:20px 16px; box-shadow:var(--shadow), 0 0 30px rgba(212,175,55,0.3);
+            transition:var(--transition);
+        }
+        .screen{display:block; width:100%}
+        .hidden{display:none !important}
+        h1,h2,h3{font-weight:700; line-height:1.4}
+        .title-main{
+            font-size:clamp(24px,6vw,30px); background:linear-gradient(135deg, #FFD54F, #FFB300, #FF8F00);
+            -webkit-background-clip:text; background-clip:text; color:transparent;
+            margin-bottom:4px; text-shadow:0 2px 10px rgba(255,193,7,0.4);
+            display:flex; align-items:center; justify-content:center; gap:8px;
+        }
+        .subtitle{color:var(--gray); font-size:16px; margin-bottom:20px}
+        .btn{
+            background:var(--gold); border:none; color:var(--blue-dark);
+            font-weight:700; font-size:18px; padding:14px 24px; border-radius:60px;
+            cursor:pointer; box-shadow:0 6px 0 var(--gold-dark), 0 6px 12px rgba(0,0,0,0.3);
+            transition:var(--transition); border:1px solid var(--gold-light);
+            font-family:'Cairo', sans-serif; letter-spacing:0.5px;
+            width:100%; margin:6px 0;
+        }
+        .btn:active{transform:translateY(4px); box-shadow:0 2px 0 var(--gold-dark), 0 6px 12px rgba(0,0,0,0.2);}
+        .btn.small{padding:10px 16px; font-size:16px; width:auto; margin:4px;}
+        .btn-outline{
+            background:transparent; border:2px solid var(--gold); color:var(--gold);
+            box-shadow:none; box-shadow:0 4px 8px rgba(0,0,0,0.2);
+        }
+        .mode-selector{
+            display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:18px 0;
+        }
+        .mode-btn{
+            background:var(--blue-lighter); border:1px solid var(--gold);
+            color:white; padding:10px 14px; border-radius:40px; font-weight:600;
+            font-size:15px; cursor:pointer; transition:var(--transition);
+            flex:1 0 110px; box-shadow:0 4px 0 #0F1A2A;
+        }
+        .mode-btn.active{background:var(--gold); color:var(--blue-dark); border-color:white; box-shadow:0 4px 0 var(--gold-dark);}
+        .game-bar{
+            display:flex; justify-content:space-between; align-items:center;
+            background:rgba(0,0,0,0.3); padding:10px 14px; border-radius:60px;
+            margin-bottom:15px; border:1px solid var(--gold);
+        }
+        .hearts{display:flex; gap:6px; font-size:24px;}
+        .streak-badge{
+            background:linear-gradient(135deg, #FF9800, #F44336); padding:5px 14px;
+            border-radius:40px; font-weight:800; color:white; box-shadow:0 0 12px #FF9800;
+        }
+        .timer-progress{height:8px; background:#1E2F44; border-radius:10px; margin:10px 0; overflow:hidden;}
+        .timer-bar{height:100%; width:100%; background:linear-gradient(90deg, #2ECC71, #F1C40F, #E74C3C); transition:width 1s linear;}
+        .question-box{
+            background:rgba(255,255,255,0.03); padding:22px 16px; border-radius:24px;
+            border:1px solid var(--gold); margin:12px 0; font-size:20px; font-weight:600;
+        }
+        .options-grid{display:flex; flex-direction:column; gap:12px; margin:16px 0;}
+        .option-btn{
+            background:var(--blue-card); border:2px solid var(--gold); padding:18px;
+            border-radius:20px; color:white; font-size:18px; font-weight:500;
+            text-align:center; cursor:pointer; transition:var(--transition);
+            box-shadow:0 6px 0 #0A121F;
+        }
+        .option-btn.correct{background:var(--green); border-color:white; box-shadow:0 4px 0 #1E8C4C; animation: correct-pulse 0.3s ease-out;}
+        .option-btn.wrong{background:var(--red); border-color:white; box-shadow:0 4px 0 #B03A2E; animation: wrong-shake 0.4s ease-out;}
+        .option-btn:disabled{opacity:0.7; cursor:not-allowed;}
+        @keyframes correct-pulse {
+            0% {transform:scale(1);} 50% {transform:scale(1.05);} 100% {transform:scale(1);}
+        }
+        @keyframes wrong-shake {
+            0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 50%{transform:translateX(5px)} 80%{transform:translateX(-3px)}
+        }
+        .tf-container{display:flex; gap:16px; margin:20px 0;}
+        .tf-btn{flex:1; padding:22px; border-radius:30px; font-size:22px; font-weight:800; background:var(--blue-lighter); border:2px solid var(--gold); color:white; cursor:pointer; box-shadow:0 6px 0 #0F1A2A;}
+        .tf-btn.correct{background:var(--green); animation: correct-pulse 0.3s ease-out;}
+        .tf-btn.wrong{background:var(--red); animation: wrong-shake 0.4s ease-out;}
+        .tf-btn:disabled{opacity:0.6; cursor:not-allowed;}
+        .powerups-bar{display:flex; gap:8px; justify-content:center; margin:10px 0;}
+        .powerup-icon{
+            background:var(--blue-lighter); border:1px solid var(--gold); width:50px; height:50px;
+            border-radius:30px; display:flex; align-items:center; justify-content:center;
+            font-size:24px; cursor:pointer; transition:var(--transition); box-shadow:0 4px 0 #0F1A2A;
+        }
+        .powerup-icon.disabled{opacity:0.4; pointer-events:none; filter:grayscale(1);}
+        .hint-message{
+            background:rgba(212,175,55,0.15); border-right:5px solid var(--gold);
+            padding:14px; border-radius:16px; margin:15px 0; text-align:right;
+        }
+        .leaderboard-list{max-height:200px; overflow-y:auto; margin:10px 0; padding:0 8px;}
+        .visitor-counter{font-size:15px; color:var(--gray); margin:10px 0; display:flex; align-items:center; justify-content:center; gap:6px;}
+        .shake{animation:shake 0.4s;}
+        @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+        .fade-in{animation:fadeIn 0.4s;}
+        @keyframes fadeIn{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:translateY(0)}}
+        .modal-overlay{
+            position:fixed; top:0;left:0;width:100%;height:100%; background:rgba(0,0,0,0.9);
+            display:flex; align-items:center; justify-content:center; z-index:2000;
+        }
+        .modal-content{
+            max-width:95%; max-height:90%; border:4px solid var(--gold); border-radius:30px;
+            box-shadow:0 0 50px gold; object-fit:contain; background:white;
+        }
+        .modal-fallback {
+            color: var(--gold);
+            font-size: 20px;
+            text-align: center;
+            padding: 30px;
+            background: var(--blue-card);
+            border-radius: 20px;
+        }
+        .close-modal-btn{position:absolute; top:20px; right:20px; color:var(--gold); font-size:40px; cursor:pointer; z-index:2010;}
+        .teacher-panel{
+            background:#0F1A2A; border-radius:20px; padding:12px; max-height:300px; overflow:auto;
+            text-align:right; border:1px solid var(--gold); margin-top:15px;
+        }
+        .teacher-search{width:100%; padding:10px; border-radius:30px; border:none; margin-bottom:10px; background:var(--blue-card); color:white; border:1px solid var(--gold);}
+        footer{margin-top:20px; color:var(--gray); font-size:14px;}
+        .sound-toggle{
+            position:fixed; bottom:15px; left:15px; background:rgba(0,0,0,0.6); border:1px solid var(--gold);
+            border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center;
+            cursor:pointer; z-index:500; font-size:22px; color:var(--gold);
+        }
+        .fun-emoji{font-size:1.4em; margin:0 4px;}
+        @media (orientation: landscape) {
+            body { padding:8px; }
+            .game-container { max-width:700px; padding:16px; }
+            .options-grid { gap:8px; }
+            .option-btn { padding:14px; font-size:16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- شاشة البداية Splash -->
+<div id="splashScreen">
+    <span class="logo-emoji">🐼</span>
+    <h2>تحدى النحو</h2>
+</div>
+
+<div class="sound-toggle" id="soundToggle">🔊</div>
+
+<div class="game-container" id="gameContainer">
+    <!-- شاشة البداية -->
+    <div id="startScreen" class="screen">
+        <div style="text-align:center; margin-bottom:10px;">
+            <h1 class="title-main">
+                <span>🐼📖</span> تحدي النحو 4 ابتدائي <span>🌟</span>
+            </h1>
+            <div class="subtitle">أسئلة ممتعة للصف الرابع الابتدائي · 150 سؤال</div>
+        </div>
+        <div style="display:flex; gap:6px; margin-bottom:15px;">
+            <button class="btn small btn-outline" id="rulesBtn">📚 قواعد النحو</button>
+            <button class="btn small btn-outline" id="teacherBtn">📋 وضع المعلم</button>
+        </div>
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="full">🏆 التحدي الكامل</button>
+            <button class="mode-btn" data-mode="quick">⚡ سريع (30)</button>
+            <button class="mode-btn" data-mode="friend">👥 صديق</button>
+            <button class="mode-btn" data-mode="survival">🔥 بقاء</button>
+            <button class="mode-btn" data-mode="practice">📝 تدريب</button>
+        </div>
+        
+        <div id="friendNamesPanel" style="display:none; margin:12px 0;">
+            <input type="text" id="player1Name" placeholder="اسم اللاعب الأول" style="width:48%; padding:10px; border-radius:30px; border:none; text-align:center; margin:4px;">
+            <input type="text" id="player2Name" placeholder="اسم اللاعب الثاني" style="width:48%; padding:10px; border-radius:30px; border:none; text-align:center; margin:4px;">
+        </div>
+        
+        <div style="margin:15px 0;">
+            <label style="display:flex; align-items:center; justify-content:center; gap:10px;">
+                <input type="checkbox" id="timerCheckbox"> ⏱️ تفعيل المؤقت
+            </label>
+            <div id="difficultyPanel" style="display:none; margin-top:10px;">
+                <select id="difficultySelect" style="padding:10px; border-radius:30px; background:var(--blue-card); color:white; border:1px solid var(--gold);">
+                    <option value="30">سهل (30 ثانية)</option>
+                    <option value="20" selected>متوسط (20 ثانية)</option>
+                    <option value="10">صعب (10 ثوان)</option>
+                </select>
+            </div>
+        </div>
+        
+        <button class="btn" id="startGameBtn">🚀 ابدأ التحدي</button>
+        <button class="btn small btn-outline" id="shuffleBtn">🔀 خلط الأسئلة</button>
+        
+        <div style="margin-top:24px; background:rgba(0,0,0,0.3); border-radius:24px; padding:12px;">
+            <div style="display:flex; align-items:center; gap:8px; color:var(--gold);"><span>🏆</span><h3>لوحة الشرف</h3></div>
+            <div id="leaderboardList" class="leaderboard-list"></div>
+        </div>
+        
+        <div class="visitor-counter" id="visitorCounter">👁️ الزوار اليوم: <span id="visitorCount">0</span></div>
+        <div id="teacherPanel" class="teacher-panel" style="display:none;"></div>
+    </div>
+
+    <!-- شاشة اللعب -->
+    <div id="gameScreen" class="screen hidden">
+        <div class="game-bar">
+            <span>📌 <span id="currentQNumber">1</span>/<span id="totalQDisplay">150</span></span>
+            <div class="hearts" id="heartsDisplay">❤️❤️❤️</div>
+            <span>⭐ <span id="scoreDisplay">0</span></span>
+        </div>
+        <div id="playerTurnBadge" style="display:none; background:var(--gold); color:var(--blue-dark); padding:6px; border-radius:30px; margin-bottom:8px; font-weight:bold;"></div>
+        <div id="streakDisplay" class="streak-badge" style="display:none;">🔥 0</div>
+        
+        <div class="powerups-bar">
+            <div class="powerup-icon" id="fiftyFifty" data-type="fifty">🎲</div>
+            <div class="powerup-icon" id="extraTime" data-type="time">⏳</div>
+            <div class="powerup-icon" id="hintPower" data-type="hint">💡</div>
+        </div>
+        
+        <div id="timerContainer" style="display:none;">
+            <div style="display:flex; justify-content:space-between;"><span>⏳</span><span id="timerValue">20</span></div>
+            <div class="timer-progress"><div class="timer-bar" id="timerBar"></div></div>
+        </div>
+        <div class="timer-progress"><div id="progressBar" class="timer-bar" style="width:0%; background:var(--gold);"></div></div>
+        
+        <div class="question-box" id="questionText">جاري تحميل السؤال...</div>
+        <div id="optionsContainer" class="options-grid"></div>
+        <div id="tfContainer" class="tf-container hidden">
+            <button class="tf-btn" id="trueBtn">✅ صواب</button>
+            <button class="tf-btn" id="falseBtn">❌ خطأ</button>
+        </div>
+        <div id="hintBox" class="hint-message hidden"></div>
+        <div style="display:flex; gap:10px; margin:10px 0;">
+            <button class="btn small" id="skipBtn">⏭️ تخطي</button>
+        </div>
+        <div id="feedbackMsg" style="min-height:30px; font-weight:bold;"></div>
+    </div>
+
+    <!-- شاشة النهاية -->
+    <div id="endScreen" class="screen hidden">
+        <h2 style="color:var(--gold);">🎈 أحسنت! 🎈</h2>
+        <div id="finalResultContainer" style="font-size:24px; margin:10px 0;"></div>
+        <div id="starsRating" style="font-size:28px; margin:10px;"></div>
+        <div id="gameStatsContainer" style="background:rgba(0,0,0,0.3); padding:12px; border-radius:20px; text-align:right; margin:15px 0;"></div>
+        <input type="text" id="playerNameForLeaderboard" placeholder="اسمك للوحة الشرف" style="width:100%; padding:12px; border-radius:40px; border:none; margin:10px 0; text-align:center;">
+        <button class="btn small" id="saveScoreBtn">💾 حفظ النتيجة</button>
+        <button class="btn small btn-outline" id="shareBtn">📤 مشاركة</button>
+        <button class="btn" id="playAgainBtn">🔄 العب مجدداً</button>
+    </div>
+</div>
+
+<!-- مودال القواعد -->
+<div id="rulesModal" class="modal-overlay hidden">
+    <span class="close-modal-btn" id="closeModalBtn">&times;</span>
+    <div id="rulesImageContainer">
+        <img class="modal-content" id="rulesImage" src="" alt="قواعد النحو للصف الرابع" style="display:none;">
+        <div id="rulesFallback" class="modal-fallback" style="display:none;">تعذر تحميل صورة القواعد 📚<br>يمكنك الاطلاع على القواعد في وضع المعلم</div>
+    </div>
+</div>
+
+<footer>تم التطوير بواسطة: مستر أحمد السمرى © 2025</footer>
+
+<script>
+(function(){
+    "use strict";
+
+    // Splash Screen
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('splashScreen').classList.add('fade-out');
+        }, 1500);
+    });
+
+    // ---------- دوال مساعدة ----------
+    const shuffleArray = (arr) => {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    };
+
+    const escapeHTML = (str) => {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    };
+
+    // تأثير confetti
+    const launchConfetti = () => {
+        const colors = ['#D4AF37','#F5D76E','#FF80AB','#2ECC71','#FF9800'];
+        const container = document.createElement('div');
+        container.className = 'confetti-container';
+        document.body.appendChild(container);
+        for (let i = 0; i < 50; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + '%';
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            piece.style.animationDelay = Math.random() * 1.5 + 's';
+            piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            container.appendChild(piece);
+        }
+        setTimeout(() => container.remove(), 3500);
+    };
+
+    // ---------- الثوابت ----------
+    const CONFIG = {
+        MAX_LIVES: 3,
+        SCORE_PER_QUESTION: 5,
+        STREAK_BONUS_THRESHOLD: 10,
+        STREAK_BONUS_MULTIPLIER: 2,
+        HEART_REWARD_STREAK: 5,
+        LEADERBOARD_MAX: 7,
+        TIMER_EASY: 30,
+        TIMER_MEDIUM: 20,
+        TIMER_HARD: 10,
+        TOTAL_QUESTIONS: 150
+    };
+
+    // ---------- بنك الأسئلة الكامل (150 سؤال) ----------
+    const mcqQuestions = [
+        { type: 'mcq', q: "كلمة (المعلمة) تعتبر اسماً لأن بها علامة:", o: ["التنوين", "التاء المربوطة", "السبق بـ 'يا'", "أنها فعل"], a: 1, hint: "التاء المربوطة في آخر الكلمة من علامات الأسماء." },
+        { type: 'mcq', q: "أي من الكلمات التالية 'فعل مضارع'؟", o: ["قرأ", "اقرأ", "يقرأ", "قراءة"], a: 2, hint: "الفعل المضارع يبدأ بأحد حروف (أنيت) ويدل على الاستمرار." },
+        { type: 'mcq', q: "النوع الصحيح لـ 'في - من - إلى' هو:", o: ["حروف عطف", "حروف جر", "أسماء إشارة", "ضمائر غائب"], a: 1, hint: "هذه الحروف تجر الأسماء التي تأتي بعدها." },
+        { type: 'mcq', q: "(الشجرةُ مثمرةٌ).. إعراب كلمة (الشجرة) هو:", o: ["خبر مرفوع", "مبتدأ مرفوع", "فاعل مرفوع", "اسم مجرور"], a: 1, hint: "الاسم الذي نبدأ به الجملة الاسمية يسمى مبتدأ." },
+        { type: 'mcq', q: "علامة رفع المبتدأ والخبر إذا كانا 'جمع تكسير':", o: ["الألف", "الواو", "الضمة", "الفتحة"], a: 2, hint: "جمع التكسير يرفع بالضمة مثل المفرد تماماً." },
+        { type: 'mcq', q: "(المهندسون بارعون).. علامة رفع الخبر هنا هي الواو لأنه:", o: ["مثنى", "جمع مؤنث سالم", "جمع مذكر سالم", "جمع تكسير"], a: 2, hint: "جمع المذكر السالم ينتهي بواو ونون في حالة الرفع." },
+        { type: 'mcq', q: "اسم الإشارة المناسب لـ (طبيبتان ماهرتان) هو:", o: ["هذان", "هاتان", "هؤلاء", "هذه"], a: 1, hint: "نستخدم (هاتان) للمثنى المؤنث." },
+        { type: 'mcq', q: "الضمير (هم) يستخدم لـ:", o: ["جمع المذكر الغائب", "جمع المؤنث الغائب", "المثنى الغائب", "المفرد الغائب"], a: 0, hint: "نقول (هم تلاميذ) للغائبين." },
+        { type: 'mcq', q: "(نحن نحب القراءة).. الضمير (نحن) نوعه:", o: ["ضمير مخاطب", "ضمير غائب", "ضمير متكلم", "اسم إشارة"], a: 2, hint: "أنا ونحن هما ضمائر المتكلم." },
+        { type: 'mcq', q: "كلمة (أشجار) هي جمع:", o: ["مذكر سالم", "مؤنث سالم", "تكسير", "مفرد"], a: 2, hint: "تغير شكل المفرد (شجرة) تماماً لذا هو جمع تكسير." },
+        { type: 'mcq', q: "(الطالبان مجتهدان).. كلمة (مجتهدان) مرفوعة وعلامة رفعها:", o: ["الضمة", "الواو", "الألف", "الفتحة"], a: 2, hint: "المثنى يرفع دائماً بالألف." },
+        { type: 'mcq', q: "أي من هذه الكلمات 'فعل أمر'؟", o: ["يكتب", "كتب", "اكتب", "كاتب"], a: 2, hint: "فعل الأمر فيه طلب القيام بعمل معين." },
+        { type: 'mcq', q: "(سلمتُ على الأصدقاء).. كلمة (الأصدقاء) اسم علامته:", o: ["التنوين", "السبق بحرف جر", "النداء", "التاء المربوطة"], a: 1, hint: "سبقت الكلمة بحرف الجر 'على'." },
+        { type: 'mcq', q: "اسم الإشارة المناسب لجمع غير العاقل (كتب - أقلام):", o: ["هؤلاء", "هذه", "هذان", "هاتان"], a: 1, hint: "جمع غير العاقل يعامل معاملة المفردة المؤنثة فنقول 'هذه كتب'." },
+        { type: 'mcq', q: "(أنتما طالبان مهذبان).. الضمير (أنتما) للمخاطب:", o: ["المفرد", "الجمع", "المثنى", "الغائب"], a: 2, hint: "(أنتما) تستخدم للاثنين، مذكر أو مؤنث." },
+        { type: 'mcq', q: "كلمة (ساحات) نوع الجمع فيها:", o: ["تكسير", "مذكر سالم", "مؤنث سالم", "مفرد"], a: 2, hint: "ينتهي الجمع بألف وتاء زائدتين (ات)." },
+        { type: 'mcq', q: "(الفلاحون نشيطون).. إعراب كلمة (نشيطون):", o: ["مبتدأ", "خبر مرفوع بالواو", "خبر مرفوع بالضمة", "فاعل"], a: 1, hint: "كلمة (نشيطون) أخبرت عن المبتدأ وهي جمع مذكر سالم." },
+        { type: 'mcq', q: "حرف العطف الذي يفيد الترتيب مع التراخي (وقت طويل):", o: ["الواو", "الفاء", "ثم", "أو"], a: 2, hint: "نستخدم (ثم) عندما يكون هناك فاصل زمني." },
+        { type: 'mcq', q: "(هي تلميذة متفوقة).. الضمير (هي) يستخدم لـ:", o: ["المفرد المذكر الغائب", "المفردة المؤنثة الغائبة", "المثنى", "المخاطب"], a: 1, hint: "نستخدم (هي) للبنت الغائبة." },
+        { type: 'mcq', q: "علامة رفع المبتدأ في جملة (الأمهات رحيمات):", o: ["الألف", "الواو", "الضمة", "الكسرة"], a: 2, hint: "جمع المؤنث السالم يرفع بالضمة." },
+        { type: 'mcq', q: "أي جملة مما يلي جملة اسمية؟", o: ["نام الطفل", "يلعب الولد", "الحديقة جميلة", "اشرب اللبن"], a: 2, hint: "الجملة الاسمية هي التي تبدأ باسم." },
+        { type: 'mcq', q: "الكلمة التي تدل على فعل ماضٍ هي:", o: ["يسمع", "اسمع", "سمع", "سامع"], a: 2, hint: "الفعل الماضي حدث وانتهى." },
+        { type: 'mcq', q: "اسم الإشارة المناسب لـ (عمال مخلصون) هو:", o: ["هذه", "هذان", "هؤلاء", "هاتان"], a: 2, hint: "نستخدم (هؤلاء) لجمع العاقل." },
+        { type: 'mcq', q: "إعراب (الخبر) دائماً يكون:", o: ["مرفوع", "منصوب", "مجرور", "مجزوم"], a: 0, hint: "المبتدأ والخبر توأمان في حالة الرفع دائماً." },
+        { type: 'mcq', q: "كلمة (حدائق) جمع تكسير، علامة رفعها:", o: ["الواو", "الضمة", "الألف", "الفتحة"], a: 1, hint: "جمع التكسير يعامل معاملة المفرد في الإعراب." },
+        { type: 'mcq', q: "الاسم الذي يقع بعد حرف الجر يسمى:", o: ["مبتدأ", "خبراً", "اسماً مجروراً", "فاعلاً"], a: 2, hint: "كل اسم يسبقه حرف جر يعرب اسماً مجروراً." },
+        { type: 'mcq', q: "(الفتاتان مهذبتان).. كلمة (مهذبتان) تعرب خبر مرفوع بـ:", o: ["الضمة", "الواو", "الألف", "النون"], a: 2, hint: "المثنى يرفع بالألف وينتهي بـ (ان)." },
+        { type: 'mcq', q: "علامة الاسم في كلمة (يا محمدُ) هي:", o: ["التاء المربوطة", "السبق بـ 'ال'", "النداء", "التنوين"], a: 2, hint: "دخول حرف النداء (يا) على الكلمة يجعلها اسماً." },
+        { type: 'mcq', q: "(يحرصُ) الفلاح على أرضه.. الفعل (يحرص) نوعه:", o: ["ماضٍ", "مضارع", "أمر", "اسم"], a: 1, hint: "الفعل يبدأ بالياء ويدل على حدث مستمر." },
+        { type: 'mcq', q: "(أنتِ تلميذة ذكية).. الضمير (أنتِ) للمخاطب:", o: ["المفرد المذكر", "المفردة المؤنثة", "المثنى", "الجمع"], a: 1, hint: "تذكر وضع الكسرة تحت التاء للمفردة المؤنثة." },
+        { type: 'mcq', q: "أي من الكلمات التالية جمع مؤنث سالم؟", o: ["أصوات", "أوقات", "مؤمنات", "أبيات"], a: 2, hint: "جمع المؤنث السالم تكون الألف والتاء فيه زائدة على مفرده." },
+        { type: 'mcq', q: "(هذان كتابان مفيدان).. كلمة (هذان) اسم إشارة لـ:", o: ["المثنى المذكر", "المثنى المؤنث", "الجمع", "المفرد"], a: 0, hint: "نستخدم (هذان) للاثنين المذكرين." },
+        { type: 'mcq', q: "(الجنودُ أقوياءُ).. علامة رفع كلمة (أقوياء) هي:", o: ["الألف", "الواو", "الضمة", "الفتحة"], a: 2, hint: "أقوياء جمع تكسير، وجمع التكسير يرفع بالضمة." },
+        { type: 'mcq', q: "(نحن أصدقاء مخلصون).. الضمير (نحن) يستخدم لـ:", o: ["المفرد", "المثنى والجمع", "الغائب", "المخاطب"], a: 1, hint: "(نحن) ضمير متكلم للمثنى والجمع بنوعيهما." },
+        { type: 'mcq', q: "حرف العطف (الفاء) يفيد الترتيب مع:", o: ["التراخي", "السرعة", "الاختيار", "النفي"], a: 1, hint: "الفاء تفيد السرعة والتعقيب." },
+        { type: 'mcq', q: "(الممرضاتُ ساهراتٌ).. كلمة (ساهرات) خبر مرفوع بـ:", o: ["الضمة", "الألف", "الواو", "الكسرة"], a: 0, hint: "جمع المؤنث السالم يرفع بالضمة." },
+        { type: 'mcq', q: "(هؤلاءِ أطفالٌ يلعبون).. (هؤلاء) اسم إشارة لـ:", o: ["جمع غير العاقل", "جمع العاقل", "المثنى", "المفرد"], a: 1, hint: "(هؤلاء) تستخدم لمجموعة الناس (العاقل)." },
+        { type: 'mcq', q: "الاسم الذي ينتهي بـ (ون) أو (ين) زائدة هو جمع:", o: ["تكسير", "مؤنث سالم", "مذكر سالم", "مثنى"], a: 2, hint: "جمع المذكر السالم يحافظ على صورة مفرده مع زيادة النهاية." },
+        { type: 'mcq', q: "(ذاكرْ دروسك بجد).. الفعل (ذاكر) هو فعل:", o: ["ماضٍ", "مضارع", "أمر", "مبتدأ"], a: 2, hint: "الفعل يطلب منك القيام بالدراسة." },
+        { type: 'mcq', q: "علامة الاسم في كلمة (حديقةٍ) هي:", o: ["التاء المربوطة والتنوين", "الـ التعريف", "النداء", "الفعلية"], a: 0, hint: "انتهت الكلمة بتاء مربوطة وتنوين كسر." },
+        { type: 'mcq', q: "الضمير (هما) يستخدم لـ:", o: ["المفرد الغائب", "المثنى الغائب", "الجمع الغائب", "المتكلم"], a: 1, hint: "نستخدم (هما) للتحدث عن اثنين غائبين." },
+        { type: 'mcq', q: "أي جملة تبدأ بـ 'فعل'؟", o: ["العلم نور", "سافر أبي", "أنا طالب", "هذا أخي"], a: 1, hint: "الجملة الفعلية هي التي تبدأ بحدث (فعل)." },
+        { type: 'mcq', q: "(هاتان شجرتان جميلتان).. (هاتان) تستخدم لـ:", o: ["المثنى المذكر", "المثنى المؤنث", "الجمع", "المفردة"], a: 1, hint: "(هاتان) هي النسخة المؤنثة من (هذان)." },
+        { type: 'mcq', q: "(الماءُ سرُّ الحياة).. كلمة (سر) تعرب:", o: ["مبتدأ", "خبراً", "فاعلاً", "حرف جر"], a: 1, hint: "كلمة (سر) هي التي أتمت معنى الجملة بعد المبتدأ." },
+        { type: 'mcq', q: "(أنتم معلمون مبدعون).. الضمير (أنتم) للمخاطب:", o: ["المفرد", "المثنى", "جمع المذكر", "جمع المؤنث"], a: 2, hint: "نستخدم (أنتم) عند مخاطبة مجموعة من الذكور." },
+        { type: 'mcq', q: "كلمة (فصول) نوع الجمع فيها:", o: ["مذكر سالم", "مؤنث سالم", "تكسير", "مثنى"], a: 2, hint: "تغير شكل المفرد (فصل) لذا هو جمع تكسير." },
+        { type: 'mcq', q: "أي من هذه الحروف يعتبر 'حرف عطف'؟", o: ["من", "إلى", "أو", "عن"], a: 2, hint: "(أو) حرف عطف يفيد التخيير." },
+        { type: 'mcq', q: "الضمير (هنَّ) يستخدم لـ:", o: ["جمع المذكر الغائب", "جمع المؤنث الغائب", "المخاطب", "المتكلم"], a: 1, hint: "نقول (هنَّ فتيات) للغائبات." },
+        { type: 'mcq', q: "علامة رفع المبتدأ في جملة (الميادينُ واسعةٌ):", o: ["الياء", "الواو", "الضمة", "الألف"], a: 2, hint: "انتبه! كلمة (الميادين) جمع تكسير وليست جمع مذكر سالم، فترفع بالضمة." },
+        { type: 'mcq', q: "(هو يحب الخير).. الضمير (هو) نوعه:", o: ["متكلم", "مخاطب", "غائب", "إشارة"], a: 2, hint: "نستخدم (هو) للحديث عن شخص غير موجود." },
+        { type: 'mcq', q: "كلمة (السماء) في جملة (السماءُ صافيةٌ) تعرب:", o: ["خبراً مرفوعاً", "مبتدأ مرفوعاً", "فاعلاً مرفوعاً", "اسماً مجروراً"], a: 1, hint: "الاسم الذي نبدأ به الجملة الاسمية هو المبتدأ." },
+        { type: 'mcq', q: "(نحنُ تلاميذُ أذكياءُ).. الضمير (نحن) يستخدم لـ:", o: ["المفرد", "المثنى فقط", "الجمع فقط", "المثنى والجمع"], a: 3, hint: "(نحن) ضمير متكلم يعبر عن الاثنين أو الجماعة." },
+        { type: 'mcq', q: "أي من الكلمات التالية تنتهي بـ 'تاء مربوطة' وهي من علامات الأسماء؟", o: ["بنت", "مدرسة", "وقت", "كتبت"], a: 1, hint: "التاء المربوطة (ة) تختلف عن التاء المفتوحة (ت)." },
+        { type: 'mcq', q: "(هذهِ مساجدُ واسعةٌ).. نستخدم (هذه) مع (مساجد) لأنها:", o: ["مفردة مؤنثة", "جمع مذكر عاقل", "جمع غير عاقل", "مثنى مؤنث"], a: 2, hint: "جمع غير العاقل يعامل معاملة المفردة المؤنثة في الإشارة." },
+        { type: 'mcq', q: "الفعل الذي يدل على حدث انتهى قبل زمن التكلم هو:", o: ["الفعل المضارع", "الفعل الماضي", "فعل الأمر", "اسم الفعل"], a: 1, hint: "الماضي هو ما حدث وانتهى مثل 'شربَ' أو 'لعبَ'." },
+        { type: 'mcq', q: "(أنتما متفوقان).. الضمير (أنتما) يستخدم للمخاطب:", o: ["المفرد", "الجمع", "المثنى بنوعيه", "الغائب"], a: 2, hint: "(أنتما) للمثنى المذكر والمثنى المؤنث." },
+        { type: 'mcq', q: "علامة رفع المبتدأ في جملة (العصافيرُ مغردةٌ) هي:", o: ["الألف", "الواو", "الضمة", "الفتحة"], a: 2, hint: "العصافير جمع تكسير، وجمع التكسير يرفع بالضمة." },
+        { type: 'mcq', q: "الحرف (و) في جملة (جاء أحمد ومحمد) يفيد:", o: ["الترتيب والسرعة", "الترتيب والتراخي", "المشاركة بلا ترتيب", "الاختيار"], a: 2, hint: "حرف الواو يجمع بين الاثنين في وقت واحد." },
+        { type: 'mcq', q: "(أنتِ ممرضةٌ رحيمةٌ).. الضمير (أنتِ) نوعه:", o: ["متكلم", "مخاطب", "غائب", "إشارة"], a: 1, hint: "ضمائر المخاطب تبدأ بـ (أنتَ، أنتِ، أنتما...)." },
+        { type: 'mcq', q: "كلمة (لاعبون) جمع مذكر سالم، علامة رفعها:", o: ["الضمة", "الألف", "الواو", "النون"], a: 2, hint: "جمع المذكر السالم يرفع بالواو في حالة الرفع." },
+        { type: 'mcq', q: "(الفتاتانِ صادقتانِ).. كلمة (صادقتان) خبر مرفوع بـ:", o: ["الضمة", "الواو", "الألف", "النون"], a: 2, hint: "المثنى يرفع دائماً بالألف." },
+        { type: 'mcq', q: "(سافرَ السائحُ إلى الأقصر).. كلمة (الأقصر) اسم علامته:", o: ["النداء", "التنوين", "السبق بحرف جر", "التاء المربوطة"], a: 2, hint: "سبق الاسم بحرف الجر (إلى)." },
+        { type: 'mcq', q: "أي من الكلمات التالية جمع تكسير؟", o: ["مؤمنون", "فلاحات", "أقلام", "مهندسان"], a: 2, hint: "أقلام جمع تغير فيه شكل المفرد (قلم)." },
+        { type: 'mcq', q: "(أنا أحبُّ مدرستي).. الضمير (أنا) يستخدم للمتكلم:", o: ["المفرد بنوعيه", "المثنى", "الجمع", "الغائب"], a: 0, hint: "(أنا) للمفرد المذكر أو المفردة المؤنثة." },
+        { type: 'mcq', q: "(هؤلاءِ أبطالُ مصر).. (هؤلاء) تستخدم لجمع:", o: ["غير العاقل", "العاقل", "المثنى المذكر", "المثنى المؤنث"], a: 1, hint: "(هؤلاء) لجمع البشر (العاقل)." },
+        { type: 'mcq', q: "الفعل (ساعدْ) غيرك.. نوع الفعل هنا:", o: ["ماضٍ", "مضارع", "أمر", "خبر"], a: 2, hint: "الفعل يحمل صيغة الطلب." },
+        { type: 'mcq', q: "(الطبيباتُ مخلصاتٌ).. كلمة (الطبيبات) مبتدأ مرفوع بـ:", o: ["الواو", "الألف", "الضمة", "الكسرة"], a: 2, hint: "جمع المؤنث السالم يرفع بالضمة." },
+        { type: 'mcq', q: "علامة الاسم في كلمة (رجلاً) هي:", o: ["الـ التعريف", "النداء", "التنوين", "التاء المربوطة"], a: 2, hint: "الكلمة تنتهي بفتحتين (تنوين فتح)." },
+        { type: 'mcq', q: "(هو مهندسٌ بارعٌ).. الضمير (هو) للمفرد المذكر:", o: ["المخاطب", "الغائب", "المتكلم", "الإشارة"], a: 1, hint: "نستخدم (هو) للحديث عمن ليس معنا." },
+        { type: 'mcq', q: "حرف الجر في جملة (كتبتُ بالقلمِ) هو:", o: ["كتبت", "الباء", "القلم", "لا يوجد"], a: 1, hint: "الباء حرف جر متصل بالكلمة." },
+        { type: 'mcq', q: "(هذانِ خصمانِ).. كلمة (خصمان) تدل على:", o: ["مفرد", "مثنى", "جمع تكسير", "جمع مذكر"], a: 1, hint: "الكلمة تنتهي بـ (ان) وتدل على اثنين." },
+        { type: 'mcq', q: "(الحدائقُ جميلةٌ).. كلمة (جميلة) تعرب:", o: ["مبتدأ", "خبراً", "فاعلاً", "اسماً مجروراً"], a: 1, hint: "أخبرتنا عن الحدائق أنها جميلة." },
+        { type: 'mcq', q: "أي من الضمائر التالية يستخدم لجمع المؤنث الغائب؟", o: ["هم", "هنَّ", "هنا", "هؤلاء"], a: 1, hint: "نستخدم (هنَّ) للغائبات من النساء." },
+        { type: 'mcq', q: "(اقرأْ باسم ربك).. الفعل (اقرأ) علامته:", o: ["الضمة", "الفتحة", "السكون", "الكسرة"], a: 2, hint: "فعل الأمر الصحيح الآخر يبنى على السكون." },
+        { type: 'mcq', q: "نوع الجمع في كلمة (ميادين):", o: ["مذكر سالم", "مؤنث سالم", "تكسير", "مثنى"], a: 2, hint: "رغم انتهائها بـ (ين) إلا أن مفردها (ميدان) تغير شكله." },
+        { type: 'mcq', q: "الكلمة التي تدل على (مثنى مؤنث) هي:", o: ["طالبان", "طالبتان", "طلاب", "طالبات"], a: 1, hint: "المثنى المؤنث ينتهي بـ (تان)." },
+        { type: 'mcq', q: "(نحنُ أوفياءُ).. كلمة (أوفياء) جمع نوعه:", o: ["مذكر سالم", "مؤنث سالم", "تكسير", "مثنى"], a: 2, hint: "تغير شكل المفرد (وفيّ) عند الجمع." },
+        { type: 'mcq', q: "اسم الإشارة (هذه) يستخدم مع المفردة المؤنثة ومع:", o: ["جمع المذكر السالم", "جمع غير العاقل", "المثنى المذكر", "جمع العاقل"], a: 1, hint: "نقول (هذه جبال) و (هذه أشجار)." },
+        { type: 'mcq', q: "(أنتم جنودٌ شجعانٌ).. الضمير (أنتم) نوعه:", o: ["متكلم", "مخاطب", "غائب", "إشارة"], a: 1, hint: "نخاطب به جمع الذكور." },
+        { type: 'mcq', q: "أي من الكلمات التالية فعل مضارع؟", o: ["سجد", "اسجد", "يسجد", "سجود"], a: 2, hint: "يبدأ بحرف الياء ويدل على الاستمرار." },
+        { type: 'mcq', q: "(الماءُ باردٌ).. كلمة (بارد) تعرب:", o: ["مبتدأ", "خبراً", "فاعلاً", "اسماً مجروراً"], a: 1, hint: "كلمة بارد أتمت معنى الجملة بعد المبتدأ." },
+        { type: 'mcq', q: "علامة رفع المبتدأ في جملة (المهندسان ماهران) هي:", o: ["الضمة", "الواو", "الألف", "الفتحة"], a: 2, hint: "المثنى يرفع بالألف." },
+        { type: 'mcq', q: "(ذهب السائحُ إلى الأهرامات).. كلمة (الأهرامات) جمع:", o: ["مذكر سالم", "مؤنث سالم", "تكسير", "مفرد"], a: 1, hint: "تنتهي بألف وتاء زائدتين (ات)." },
+        { type: 'mcq', q: "(هنَّ أمهاتٌ رحيماتٌ).. الضمير (هنَّ) يستخدم لـ:", o: ["جمع المذكر الغائب", "جمع المؤنث الغائب", "المثنى", "المخاطب"], a: 1, hint: "ضمير غائب لمجموعة الإناث." },
+        { type: 'mcq', q: "حرف الجر (الكاف) في (الجندي كالأسد) يفيد:", o: ["الظرفية", "التشبيه", "الملكية", "الانتهاء"], a: 1, hint: "نستخدم الكاف لتشبيه شيء بآخر." },
+        { type: 'mcq', q: "(العمالُ متقنونَ).. كلمة (متقنون) خبر مرفوع بـ:", o: ["الضمة", "الألف", "الواو", "النون"], a: 2, hint: "جمع المذكر السالم يرفع بالواو." },
+        { type: 'mcq', q: "(هاتانِ وردتانِ جميلتانِ).. (هاتان) اسم إشارة لـ:", o: ["المثنى المذكر", "المثنى المؤنث", "المفردة", "الجمع"], a: 1, hint: "نستخدم (هاتان) للاثنتين المؤنثتين." },
+        { type: 'mcq', q: "(تفتحتْ الأزهارُ في الربيع).. كلمة (الأزهار) تعرب فاعلاً علامته:", o: ["الألف", "الواو", "الضمة", "الفتحة"], a: 2, hint: "الأزهار جمع تكسير، وجمع التكسير يرفع بالضمة." },
+        { type: 'mcq', q: "الضمير (أنتَ) يستخدم للمخاطب:", o: ["المفرد المذكر", "المفردة المؤنثة", "المثنى", "الجمع"], a: 0, hint: "نضع فتحة فوق التاء للمفرد المذكر." },
+        { type: 'mcq', q: "أي من الكلمات التالية تعتبر (حرف عطف)؟", o: ["عن", "أو", "ليت", "من"], a: 1, hint: "(أو) حرف عطف يفيد التخيير." },
+        { type: 'mcq', q: "(العلمُ يرفعُ بيوتاً).. نوع الجملة هنا:", o: ["فعلية", "اسمية", "شبه جملة", "لا شيء مما سبق"], a: 1, hint: "بدأت بكلمة (العلم) وهي اسم." },
+        { type: 'mcq', q: "(هذانِ ولدانِ مؤدبانِ).. كلمة (ولدان) تدل على:", o: ["مفرد", "مثنى", "جمع", "اسم فعل"], a: 1, hint: "الكلمة تدل على اثنين." },
+        { type: 'mcq', q: "علامة الاسم في كلمة (باسمِ اللهِ) هي:", o: ["التاء المربوطة", "السبق بحرف جر", "التنوين", "النداء"], a: 1, hint: "كلمة (اسم) سبقت بحرف الجر (الباء)." },
+        { type: 'mcq', q: "(هي تساعدُ أمها).. الضمير (هي) للمفردة المؤنثة:", o: ["الغائبة", "المخاطبة", "المتكلمة", "الموجودة"], a: 0, hint: "نستخدم (هي) لمن نتحدث عنها وهي ليست معنا." },
+        { type: 'mcq', q: "الكلمة التي تدل على (جمع مذكر سالم) هي:", o: ["مساكين", "فنون", "صادقون", "شياطين"], a: 2, hint: "صادقون مفردها (صادق) لم يتغير شكله عند الجمع." },
+        { type: 'mcq', q: "(دافعْ عن وطنك).. الفعل (دافع) فعل:", o: ["ماضٍ", "مضارع", "أمر", "اسم"], a: 2, hint: "طلب القيام بفعل الدفاع." },
+        { type: 'mcq', q: "(السماءُ تمطرُ).. كلمة (تمطر) نوعها:", o: ["اسم", "فعل", "حرف", "خبر مفرد"], a: 1, hint: "تدل على حدث مستمر في الزمن الحالي." },
+        { type: 'mcq', q: "(أنا ونحن) تسمى ضمائر:", o: ["الغائب", "المخاطب", "المتكلم", "الإشارة"], a: 2, hint: "يستخدمها الشخص ليتحدث عن نفسه أو مجموعته." },
+        { type: 'mcq', q: "(القصصُ ممتعةٌ).. علامة رفع المبتدأ هنا:", o: ["الواو", "الألف", "الضمة", "الفتحة"], a: 2, hint: "القصص جمع تكسير، يرفع بالضمة." },
+        { type: 'mcq', q: "أداة تستخدم للإشارة للبعيد (للمذكر):", o: ["هذا", "ذلك", "تلك", "هؤلاء"], a: 1, hint: "نقول (ذلك نجمٌ بعيد)." }
+    ];
+
+    const tfQuestions = [
+        { type: 'tf', q: "كلمة (يقرأ) هي اسم لأنها تدل على معنى.", a: false, hint: "يقرأ تدل على حدث وزمن، فهي فعل وليست اسماً." },
+        { type: 'tf', q: "التنوين من العلامات التي تميز الأسماء فقط.", a: true, hint: "الأفعال والحروف لا تقبل التنوين أبداً." },
+        { type: 'tf', q: "الفعل الماضي هو ما دل على حدث وقع وانتهى.", a: true, hint: "مثل: كتبَ، رسمَ، شربَ." },
+        { type: 'tf', q: "تعتبر (في) من حروف العطف.", a: false, hint: "(في) حرف جر، وحروف العطف مثل (الواو، ثم، الفاء)." },
+        { type: 'tf', q: "المبتدأ والخبر مرفوعان دائماً.", a: true, hint: "الجملة الاسمية ركناها مرفوعان ما لم يدخل عليهما ناسخ." },
+        { type: 'tf', q: "علامة رفع المفرد هي الألف.", a: false, hint: "المفرد يرفع بالضمة، أما الألف فهي للمثنى." },
+        { type: 'tf', q: "جمع المذكر السالم ينتهي بألف وتاء (ات).", a: false, hint: "جمع المذكر السالم ينتهي بـ (ون) أو (ين)." },
+        { type: 'tf', q: "كلمة (أقلام) هي جمع تكسير.", a: true, hint: "لأن شكل المفرد (قلم) تغير تماماً عند الجمع." },
+        { type: 'tf', q: "نستخدم اسم الإشارة (هؤلاء) لجمع غير العاقل.", a: false, hint: "نستخدم (هذه) لجمع غير العاقل، و(هؤلاء) للعاقل فقط." },
+        { type: 'tf', q: "الضمير (أنا) من ضمائر المتكلم.", a: true, hint: "أنا (للمفرد) ونحن (للمثنى والجمع)." },
+        { type: 'tf', q: "الجملة الفعلية هي التي تبدأ باسم.", a: false, hint: "الجملة الفعلية تبدأ بفعل، والاسمية تبدأ باسم." },
+        { type: 'tf', q: "كلمة (تذاكر) في 'تذاكر البنتُ' هي فعل مضارع.", a: true, hint: "لأنها تدل على حدث مستمر الآن." },
+        { type: 'tf', q: "المثنى هو ما دل على اثنين أو اثنتين.", a: true, hint: "وينتهي بـ (ان) في حالة الرفع." },
+        { type: 'tf', q: "علامة رفع جمع المؤنث السالم هي الواو.", a: false, hint: "جمع المؤنث السالم يرفع بالضمة كالمفرد." },
+        { type: 'tf', q: "الضمير (هو) يستخدم للمخاطب المذكر.", a: false, hint: "(هو) ضمير غائب، و(أنتَ) هو ضمير المخاطب." },
+        { type: 'tf', q: "(هذان) اسم إشارة يستخدم للمثنى المذكر.", a: true, hint: "مثل: هذان ولدان مؤدبان." },
+        { type: 'tf', q: "حرف الجر (إلى) يفيد انتهاء الغاية.", a: true, hint: "مثل: ذهبتُ إلى المدرسةِ." },
+        { type: 'tf', q: "كلمة (فنون) هي جمع مذكر سالم.", a: false, hint: "هي جمع تكسير لأن النون أصلية وليست زائدة (مفردها فن)." },
+        { type: 'tf', q: "الخبر هو الجزء الذي يتمم معنى الجملة مع المبتدأ.", a: true, hint: "بدون الخبر لا تكتمل الفائدة في الجملة الاسمية." },
+        { type: 'tf', q: "الفعل (اشربْ) هو فعل أمر.", a: true, hint: "لأنه يتضمن طلب القيام بشيء." },
+        { type: 'tf', q: "الضمير (هنَّ) يستخدم لجمع الذكور الغائبين.", a: false, hint: "(هنَّ) لجمع الإناث الغائبات، و(هم) لجمع الذكور." },
+        { type: 'tf', q: "علامة رفع المثنى هي الألف.", a: true, hint: "مثل: الطالبانِ مجتهدانِ." },
+        { type: 'tf', q: "كلمة (تحت) تعتبر حرف جر.", a: false, hint: "(تحت) ظرف مكان وليست حرف جر." },
+        { type: 'tf', q: "التاء المربوطة من علامات الأسماء.", a: true, hint: "لا توجد أفعال أو حروف تنتهي بتاء مربوطة." },
+        { type: 'tf', q: "(أنتما) ضمير يستخدم للمثنى بنوعيه.", a: true, hint: "يستخدم للمثنى المذكر والمثنى المؤنث." },
+        { type: 'tf', q: "جمع التكسير يرفع بالضمة.", a: true, hint: "يعامل معاملة المفرد في علامات الإعراب الأصلية." },
+        { type: 'tf', q: "الاسم المجرور هو الاسم الذي يسبق حرف الجر.", a: false, hint: "الاسم المجرور يأتي (بعد) حرف الجر مباشرة." },
+        { type: 'tf', q: "(تلك) اسم إشارة يستخدم للبعيد.", a: true, hint: "تستخدم للمفردة المؤنثة البعيدة." },
+        { type: 'tf', q: "الفعل (كتبتْ) البنتُ.. التاء هنا تاء الفاعل.", a: false, hint: "هذه تاء التأنيث الساكنة لأن الفاعل مؤنث صريح." },
+        { type: 'tf', q: "الضمير (نحن) يستخدم للمفرد المتكلم.", a: false, hint: "(نحن) للمثنى والجمع، أما (أنا) فللمفرد." },
+        { type: 'tf', q: "علامة رفع المبتدأ في 'العمالُ مخلصون' هي الضمة.", a: true, hint: "العمال جمع تكسير فيرفع بالضمة." },
+        { type: 'tf', q: "(يا) هي أداة نداء، والاسم بعدها يسمى منادى.", a: true, hint: "والنداء من علامات الأسماء أيضاً." },
+        { type: 'tf', q: "كلمة (مدرسة) اسم لأن فيها (ال) التعريف.", a: false, hint: "كلمة مدرسة لا تبدأ بـ (ال)، علامتها التاء المربوطة." },
+        { type: 'tf', q: "الخبر في 'الشمسُ تشرقُ' نوعه جملة.", a: true, hint: "(تشرق) فعل، لذا الخبر هنا جملة فعلية وليس مفرداً." },
+        { type: 'tf', q: "اسم الإشارة (هاتان) للمثنى المؤنث.", a: true, hint: "مثل: هاتان شجرتان." },
+        { type: 'tf', q: "الفعل المضارع يبدأ دائماً بحرف من حروف (أنيت).", a: true, hint: "مثل: أكتب، نكتب، يكتب، تكتب." },
+        { type: 'tf', q: "جمع المذكر السالم يرفع بالواو.", a: true, hint: "مثل: الفلاحون نشيطون." },
+        { type: 'tf', q: "(هم) ضمير متكلم للجماعة.", a: false, hint: "(هم) ضمير غائب، وضمير المتكلم للجماعة هو (نحن)." },
+        { type: 'tf', q: "كلمة (ميادين) جمع مذكر سالم.", a: false, hint: "جمع تكسير لأن شكل المفرد (ميدان) تغير." },
+        { type: 'tf', q: "الاسم هو كل كلمة تدل على إنسان أو حيوان أو جماد.", a: true, hint: "ولا ترتبط الكلمة بزمن معين." },
+        { type: 'tf', q: "(ثم) حرف عطف يفيد السرعة.", a: false, hint: "(ثم) تفيد التراخي، أما (الفاء) فتفيد السرعة." },
+        { type: 'tf', q: "علامة جر الاسم المفرد هي الكسرة.", a: true, hint: "مثل: في المدرسةِ." },
+        { type: 'tf', q: "(أنتنَّ) ضمير مخاطب لجمع الإناث.", a: true, hint: "مثل: أنتنَّ طالباتٌ مجتهداتٌ." },
+        { type: 'tf', q: "كلمة (طبيبات) جمع مؤنث سالم.", a: true, hint: "لأن مفردها طبيبة وانتهت بـ (ات)." },
+        { type: 'tf', q: "الفاعل هو من قام بالفعل أو اتصف به.", a: true, hint: "ويكون مرفوعاً دائماً." },
+        { type: 'tf', q: "(هذا) اسم إشارة يستخدم للمفرد المؤنث.", a: false, hint: "(هذا) للمفرد المذكر، و(هذه) للمفردة المؤنثة." },
+        { type: 'tf', q: "حروف الجر تدخل على الأسماء والأفعال.", a: false, hint: "حروف الجر تدخل على الأسماء فقط." },
+        { type: 'tf', q: "(هو) و (هي) من ضمائر الغائب.", a: true, hint: "يستخدمان للحديث عن شخص غير موجود." },
+        { type: 'tf', q: "كلمة (لعبَ) فعل أمر.", a: false, hint: "(لعبَ) فعل ماضٍ، والأمر منه (العبْ)." },
+        { type: 'tf', q: "الجملة 'نحنُ مخلصون' هي جملة اسمية.", a: true, hint: "لأنها بدأت بضمير، والضمائر من الأسماء." }
+    ];
+
+    // دمج الأسئلة
+    const allQuestions = [];
+    for (let i = 0; i < tfQuestions.length; i++) {
+        allQuestions.push(mcqQuestions[i * 2]);
+        allQuestions.push(mcqQuestions[i * 2 + 1]);
+        allQuestions.push(tfQuestions[i]);
+    }
+
+    // ---------- نظام الصوت ----------
+    const SoundSystem = {
+        ctx: null, enabled: true,
+        init() { if (!this.ctx) try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { this.enabled = false; } },
+        play(type) {
+            if (!this.enabled || !this.ctx) return;
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const now = this.ctx.currentTime, osc = this.ctx.createOscillator(), gain = this.ctx.createGain();
+            osc.connect(gain); gain.connect(this.ctx.destination);
+            if (type === 'correct') { osc.frequency.value = 880; gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2); osc.start(); osc.stop(now + 0.2); }
+            else if (type === 'wrong') { osc.frequency.value = 440; gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25); osc.start(); osc.stop(now + 0.25); }
+            else if (type === 'countdown') { osc.frequency.value = 600; gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1); osc.start(); osc.stop(now + 0.1); }
+            else if (type === 'skip') { osc.frequency.value = 550; gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15); osc.start(); osc.stop(now + 0.15); }
+            else if (type === 'timeout') { osc.frequency.value = 330; gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3); osc.start(); osc.stop(now + 0.3); }
+        },
+        toggle() { this.enabled = !this.enabled; document.getElementById('soundToggle').innerHTML = this.enabled ? '🔊' : '🔇'; if (this.enabled) this.init(); }
+    };
+    document.getElementById('soundToggle').onclick = () => SoundSystem.toggle();
+
+    // -------------------- إدارة الحالة --------------------
+    class GameState {
+        constructor(){
+            this.reset();
+            this.loadLeaderboard();
+            this.updateVisitorCounter();
+        }
+        reset(){
+            this.mode = 'full'; this.currentQuestions = []; this.qIndex = 0; this.score = 0; this.lives = CONFIG.MAX_LIVES;
+            this.streak = 0; this.correctCount = 0; this.wrongCount = 0; this.skipCount = 0; this.answered = false;
+            this.timerEnabled = false; this.timerDuration = CONFIG.TIMER_MEDIUM; this.gameStartTimestamp = 0;
+            this.friend = { player1: { name: 'لاعب 1', score: 0, lives: CONFIG.MAX_LIVES }, player2: { name: 'لاعب 2', score: 0, lives: CONFIG.MAX_LIVES }, current: 1 };
+            this.powerups = { fifty: true, time: true, hint: true };
+        }
+        loadLeaderboard(){
+            try { const saved = localStorage.getItem('nahw_leaderboard_4'); this.leaderboard = saved ? JSON.parse(saved) : []; }
+            catch(e){ this.leaderboard = []; }
+        }
+        saveLeaderboard(){
+            try { localStorage.setItem('nahw_leaderboard_4', JSON.stringify(this.leaderboard)); }
+            catch(e){}
+        }
+        updateVisitorCounter(){
+            try {
+                let count = parseInt(localStorage.getItem('visitor_count_nahw') || '0');
+                const lastDate = localStorage.getItem('visitor_date_nahw'), today = new Date().toDateString();
+                if(lastDate !== today) { count++; localStorage.setItem('visitor_date_nahw', today); }
+                else { count = count || 1; }
+                localStorage.setItem('visitor_count_nahw', count);
+                document.getElementById('visitorCount').innerText = count;
+            } catch(e){ document.getElementById('visitorCount').innerText = '?'; }
+        }
+    }
+
+    // -------------------- المؤقتات --------------------
+    class TimerManager {
+        constructor(){ this.timers = []; this.intervals = []; }
+        set(fn, delay){ const id = setTimeout(fn, delay); this.timers.push(id); return id; }
+        setInterval(fn, interval){ const id = setInterval(fn, interval); this.intervals.push(id); return id; }
+        clearAll(){
+            this.timers.forEach(clearTimeout); this.intervals.forEach(clearInterval);
+            this.timers.length = 0; this.intervals.length = 0;
+        }
+    }
+
+    // -------------------- محرك اللعبة --------------------
+    class GameEngine {
+        constructor(state){
+            this.state = state;
+            this.timer = new TimerManager();
+            this.dom = this.captureDOM();
+            this.bindEvents();
+            this.prepareBaseQuestions();
+            this.renderLeaderboard();
+            SoundSystem.init();
+            this.enableKeyboardShortcuts();
+            this.setupLazyLoading();
+        }
+
+        captureDOM(){
+            return {
+                startScreen: document.getElementById('startScreen'),
+                gameScreen: document.getElementById('gameScreen'),
+                endScreen: document.getElementById('endScreen'),
+                questionText: document.getElementById('questionText'),
+                optionsDiv: document.getElementById('optionsContainer'),
+                tfDiv: document.getElementById('tfContainer'),
+                trueBtn: document.getElementById('trueBtn'),
+                falseBtn: document.getElementById('falseBtn'),
+                feedback: document.getElementById('feedbackMsg'),
+                heartsSpan: document.getElementById('heartsDisplay'),
+                scoreSpan: document.getElementById('scoreDisplay'),
+                currentQNum: document.getElementById('currentQNumber'),
+                totalQ: document.getElementById('totalQDisplay'),
+                timerContainer: document.getElementById('timerContainer'),
+                timerValue: document.getElementById('timerValue'),
+                timerBar: document.getElementById('timerBar'),
+                progressBar: document.getElementById('progressBar'),
+                streakDisplay: document.getElementById('streakDisplay'),
+                playerTurnBadge: document.getElementById('playerTurnBadge'),
+                hintBox: document.getElementById('hintBox'),
+                fiftyBtn: document.getElementById('fiftyFifty'),
+                extraTimeBtn: document.getElementById('extraTime'),
+                hintBtn: document.getElementById('hintPower')
+            };
+        }
+
+        bindEvents(){
+            document.getElementById('startGameBtn').onclick = ()=>this.startCountdown();
+            document.getElementById('shuffleBtn').onclick = ()=>this.shuffleOnly();
+            document.getElementById('timerCheckbox').onchange = (e)=> document.getElementById('difficultyPanel').style.display = e.target.checked ? 'block':'none';
+            document.querySelectorAll('.mode-btn').forEach(b=>b.onclick = (e)=>this.setMode(e.target.dataset.mode));
+            document.getElementById('rulesBtn').onclick = ()=> {
+                const modal = document.getElementById('rulesModal');
+                modal.classList.remove('hidden');
+                const img = document.getElementById('rulesImage');
+                const fallback = document.getElementById('rulesFallback');
+                img.style.display = 'none';
+                fallback.style.display = 'none';
+                img.src = 'https://i.ibb.co/6cgMNq4c/1776561800235.png';
+                img.onload = () => { img.style.display = 'block'; };
+                img.onerror = () => { fallback.style.display = 'block'; };
+            };
+            document.getElementById('closeModalBtn').onclick = ()=>document.getElementById('rulesModal').classList.add('hidden');
+            document.getElementById('teacherBtn').onclick = ()=>this.toggleTeacherPanel();
+            document.getElementById('skipBtn').onclick = ()=>this.skipQuestion();
+            document.getElementById('saveScoreBtn').onclick = ()=>this.saveScore();
+            document.getElementById('shareBtn').onclick = ()=>this.shareResult();
+            document.getElementById('playAgainBtn').onclick = ()=>this.resetToStart();
+            this.dom.trueBtn.onclick = ()=>this.handleTF(true);
+            this.dom.falseBtn.onclick = ()=>this.handleTF(false);
+            this.dom.fiftyBtn.onclick = ()=>this.usePowerUp('fifty');
+            this.dom.extraTimeBtn.onclick = ()=>this.usePowerUp('time');
+            this.dom.hintBtn.onclick = ()=>this.usePowerUp('hint');
+        }
+
+        setupLazyLoading(){}
+
+        setMode(mode){
+            this.state.mode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            document.getElementById('friendNamesPanel').style.display = mode==='friend' ? 'block':'none';
+        }
+
+        prepareBaseQuestions(){
+            this.baseQuestions = allQuestions.map(q => {
+                if(q.type === 'mcq'){
+                    const indexed = q.o.map((opt, i) => ({o: opt, i}));
+                    shuffleArray(indexed);
+                    return { ...q, o: indexed.map(x => x.o), a: indexed.findIndex(x => x.i === q.a) };
+                }
+                return q;
+            });
+            try { localStorage.setItem('cachedQuestions', JSON.stringify(this.baseQuestions)); } catch(e){}
+        }
+
+        resetQuestions(){
+            this.prepareBaseQuestions();
+            let qs = shuffleArray([...this.baseQuestions]);
+            if(this.state.mode === 'quick') qs = qs.slice(0, 30);
+            this.state.currentQuestions = qs;
+        }
+
+        shuffleOnly(){
+            this.prepareBaseQuestions();
+            alert('✨ تم خلط الأسئلة! استعد للمتعة ✨');
+        }
+
+        startCountdown(){
+            if(this.state.mode === 'friend'){
+                const p1 = document.getElementById('player1Name').value.trim() || '🐼 لاعب 1';
+                const p2 = document.getElementById('player2Name').value.trim() || '🦊 لاعب 2';
+                this.state.friend = { player1: { name: p1, score:0, lives:CONFIG.MAX_LIVES }, player2: { name: p2, score:0, lives:CONFIG.MAX_LIVES }, current:1 };
+            }
+            this.resetQuestions();
+            this.showScreen('countdown');
+            let count=3;
+            const cdDiv = document.createElement('div');
+            cdDiv.id='countdownOverlay';
+            cdDiv.style.cssText='position:fixed; top:0;left:0;width:100%;height:100%; background:#0B1120; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:5000;';
+            cdDiv.innerHTML = `<span style="font-size:120px; filter:drop-shadow(0 0 20px gold);">🐼</span><div style="font-family:'Amiri',serif; font-size:32px; background:linear-gradient(135deg,#F9D423,#F5D76E,#D4AF37); -webkit-background-clip:text; color:transparent; text-shadow:0 0 15px #b8860b; margin-bottom:20px;">مستر أحمد السمرى</div><div id="cd-number" style="font-size:150px; color:var(--gold); text-shadow:0 0 50px gold;">3</div>`;
+            document.body.appendChild(cdDiv);
+            const int = setInterval(()=>{
+                count--;
+                SoundSystem.play('countdown');
+                if(count>0) document.getElementById('cd-number').innerText = count;
+                else { clearInterval(int); cdDiv.remove(); this.startGame(); }
+            }, 700);
+        }
+
+        startGame(){
+            this.state.gameStartTimestamp = Date.now();
+            this.state.timerEnabled = document.getElementById('timerCheckbox').checked;
+            this.state.timerDuration = parseInt(document.getElementById('difficultySelect')?.value || CONFIG.TIMER_MEDIUM);
+            this.state.qIndex = 0;
+            this.state.score = 0;
+            this.state.lives = CONFIG.MAX_LIVES;
+            this.state.correctCount = 0;
+            this.state.wrongCount = 0;
+            this.state.skipCount = 0;
+            this.state.streak = 0;
+            this.state.powerups = { fifty: true, time: true, hint: true };
+            this.updatePowerupUI();
+            this.showScreen('game');
+            this.dom.totalQ.innerText = this.state.mode === 'survival' ? '∞' : this.state.currentQuestions.length;
+            this.updateHeartsAndScore();
+            this.loadQuestion();
+        }
+
+        showScreen(screen){
+            ['startScreen','gameScreen','endScreen'].forEach(s=>document.getElementById(s).classList.add('hidden'));
+            if(screen === 'start') document.getElementById('startScreen').classList.remove('hidden');
+            else if(screen === 'game') document.getElementById('gameScreen').classList.remove('hidden');
+            else if(screen === 'end') document.getElementById('endScreen').classList.remove('hidden');
+        }
+
+        loadQuestion(){
+            this.timer.clearAll();
+            this.state.answered = false;
+            this.dom.hintBox.classList.add('hidden');
+
+            if(this.state.mode === 'survival' && this.state.qIndex >= this.state.currentQuestions.length){
+                this.prepareBaseQuestions();
+                this.state.currentQuestions = shuffleArray([...this.baseQuestions]);
+                this.state.qIndex = 0;
+            }
+
+            const q = this.state.currentQuestions[this.state.qIndex];
+            this.dom.questionText.textContent = q.q;
+            this.dom.currentQNum.innerText = this.state.qIndex + 1;
+            const total = this.state.currentQuestions.length;
+            const progress = ((this.state.qIndex) / total) * 100;
+            this.dom.progressBar.style.width = `${progress}%`;
+
+            this.dom.feedback.innerHTML = '';
+
+            if(q.type === 'mcq'){
+                this.dom.optionsDiv.innerHTML = '';
+                this.dom.tfDiv.classList.add('hidden');
+                this.dom.optionsDiv.classList.remove('hidden');
+                q.o.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.onclick = () => this.checkMCQ(idx);
+                    this.dom.optionsDiv.appendChild(btn);
+                });
+            } else {
+                this.dom.optionsDiv.classList.add('hidden');
+                this.dom.tfDiv.classList.remove('hidden');
+                this.dom.trueBtn.disabled = false;
+                this.dom.falseBtn.disabled = false;
+                this.dom.trueBtn.classList.remove('correct','wrong');
+                this.dom.falseBtn.classList.remove('correct','wrong');
+            }
+
+            if(this.state.timerEnabled && this.state.mode !== 'practice') this.startTimer();
+            this.updateTurnBadge();
+
+            this.dom.gameScreen.classList.add('fade-in');
+            setTimeout(() => this.dom.gameScreen.classList.remove('fade-in'), 400);
+        }
+
+        startTimer(){
+            this.dom.timerContainer.style.display = 'block';
+            let left = this.state.timerDuration;
+            this.dom.timerValue.innerText = left;
+            this.dom.timerBar.style.width = '100%';
+            const interval = this.timer.setInterval(() => {
+                left--;
+                this.dom.timerValue.innerText = left;
+                this.dom.timerBar.style.width = `${(left / this.state.timerDuration) * 100}%`;
+                if(left <= 0 && !this.state.answered){
+                    this.state.answered = true;
+                    this.disableOptions();
+                    SoundSystem.play('timeout');
+                    this.handleWrong('⏰ انتهى الوقت');
+                }
+            }, 1000);
+        }
+
+        disableOptions(){
+            document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            this.dom.trueBtn.disabled = true;
+            this.dom.falseBtn.disabled = true;
+        }
+
+        applyLifePenalty(callbackOnEnd){
+            if(this.state.mode === 'practice') return false;
+            if(this.state.mode === 'friend'){
+                const curr = this.state.friend.current === 1 ? this.state.friend.player1 : this.state.friend.player2;
+                curr.lives = Math.max(0, curr.lives - 1);
+                this.updateHeartsAndScore();
+                if(curr.lives <= 0){
+                    if(this.state.friend.current === 1){
+                        this.state.friend.current = 2;
+                        this.state.qIndex = -1;
+                        this.resetQuestions();
+                        this.loadQuestion();
+                        return false;
+                    } else {
+                        callbackOnEnd && callbackOnEnd();
+                        return true;
+                    }
+                }
+            } else {
+                this.state.lives = Math.max(0, this.state.lives - 1);
+                this.updateHeartsAndScore();
+                if(this.state.lives <= 0){
+                    callbackOnEnd && callbackOnEnd();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        handleWrong(msg){
+            if(this.state.answered) return;
+            this.state.answered = true;
+            this.timer.clearAll();
+            this.disableOptions();
+            SoundSystem.play('wrong');
+
+            const gameEnded = this.applyLifePenalty(() => this.endGame());
+            if(gameEnded) return;
+
+            this.state.wrongCount++;
+            this.state.streak = 0;
+            this.updateStreak();
+
+            this.dom.feedback.innerHTML = msg;
+            this.dom.feedback.style.color = '#E74C3C';
+            const q = this.state.currentQuestions[this.state.qIndex];
+            if(q.hint) this.showHint(q.hint);
+
+            this.dom.gameScreen.classList.add('shake');
+            setTimeout(() => this.dom.gameScreen.classList.remove('shake'), 400);
+            this.timer.set(() => { this.state.qIndex++; this.loadQuestion(); }, 1800);
+        }
+
+        handleCorrect(){
+            if(this.state.answered) return;
+            this.state.answered = true;
+            this.timer.clearAll();
+            this.disableOptions();
+            SoundSystem.play('correct');
+
+            this.state.correctCount++;
+            this.state.streak++;
+            this.updateStreak();
+
+            if(this.state.streak % CONFIG.HEART_REWARD_STREAK === 0){
+                if(this.state.mode === 'friend'){
+                    const curr = this.state.friend.current === 1 ? this.state.friend.player1 : this.state.friend.player2;
+                    if(curr.lives < CONFIG.MAX_LIVES) curr.lives++;
+                } else if(this.state.mode !== 'practice') {
+                    if(this.state.lives < CONFIG.MAX_LIVES) this.state.lives++;
+                }
+                this.updateHeartsAndScore();
+                if(this.state.mode !== 'practice') this.dom.feedback.innerHTML += ' 🎁 قلب إضافي';
+            }
+
+            let addScore = CONFIG.SCORE_PER_QUESTION * (this.state.streak >= CONFIG.STREAK_BONUS_THRESHOLD ? CONFIG.STREAK_BONUS_MULTIPLIER : 1);
+            if(this.state.mode === 'friend'){
+                const curr = this.state.friend.current === 1 ? this.state.friend.player1 : this.state.friend.player2;
+                curr.score += addScore;
+                this.dom.scoreSpan.innerText = curr.score;
+            } else {
+                this.state.score += addScore;
+                this.dom.scoreSpan.innerText = this.state.score;
+            }
+
+            this.dom.feedback.innerHTML = '🎉✅ إجابة صحيحة! ممتاز!';
+            this.dom.feedback.style.color = '#2ECC71';
+            if(navigator.vibrate) navigator.vibrate(20);
+
+            this.timer.set(() => {
+                this.state.qIndex++;
+                if(this.state.qIndex < this.state.currentQuestions.length) this.loadQuestion();
+                else {
+                    if(this.state.mode === 'friend' && this.state.friend.current === 1){
+                        this.state.friend.current = 2;
+                        this.state.qIndex = 0;
+                        this.resetQuestions();
+                        this.loadQuestion();
+                    } else this.endGame();
+                }
+            }, 1500);
+        }
+
+        checkMCQ(sel){
+            if(this.state.answered) return;
+            const q = this.state.currentQuestions[this.state.qIndex];
+            const correct = sel === q.a;
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+            btns[q.a].classList.add('correct');
+            if(!correct){
+                btns[sel].classList.add('wrong');
+                this.handleWrong(`❌ الصواب: ${q.o[q.a]}`);
+            } else this.handleCorrect();
+        }
+
+        handleTF(ans){
+            if(this.state.answered) return;
+            const q = this.state.currentQuestions[this.state.qIndex];
+            const correct = ans === q.a;
+            this.dom.trueBtn.disabled = true;
+            this.dom.falseBtn.disabled = true;
+            (q.a ? this.dom.trueBtn : this.dom.falseBtn).classList.add('correct');
+            if(!correct){
+                (ans ? this.dom.trueBtn : this.dom.falseBtn).classList.add('wrong');
+                this.handleWrong(`❌ ${q.hint || ''}`);
+            } else this.handleCorrect();
+        }
+
+        skipQuestion(){
+            if(this.state.answered) return;
+            this.state.answered = true;
+            this.timer.clearAll();
+            this.disableOptions();
+            SoundSystem.play('skip');
+
+            const gameEnded = this.applyLifePenalty(() => this.endGame());
+            if(gameEnded) return;
+
+            this.state.skipCount++;
+            this.dom.feedback.innerHTML = '⏭️ تم التخطي';
+            this.timer.set(() => { this.state.qIndex++; this.loadQuestion(); }, 1200);
+        }
+
+        usePowerUp(type){
+            if(!this.state.powerups[type] || this.state.answered) return;
+            const q = this.state.currentQuestions[this.state.qIndex];
+            if(type === 'fifty' && q.type === 'mcq'){
+                let wrongs = q.o.map((_, i) => i).filter(i => i !== q.a);
+                wrongs = shuffleArray(wrongs).slice(0, 2);
+                document.querySelectorAll('.option-btn').forEach((b, i) => {
+                    if(wrongs.includes(i)) b.style.display = 'none';
+                });
+                this.state.powerups.fifty = false;
+            } else if(type === 'time' && this.state.timerEnabled){
+                let cur = parseInt(this.dom.timerValue.innerText) + 10;
+                this.dom.timerValue.innerText = cur;
+                this.state.powerups.time = false;
+            } else if(type === 'hint'){
+                this.showHint(q.hint || 'لا يوجد تلميح');
+                this.state.powerups.hint = false;
+            }
+            this.updatePowerupUI();
+        }
+
+        showHint(txt){
+            this.dom.hintBox.textContent = `💡 ${txt}`;
+            this.dom.hintBox.classList.remove('hidden');
+        }
+
+        updatePowerupUI(){
+            this.dom.fiftyBtn.classList.toggle('disabled', !this.state.powerups.fifty);
+            this.dom.extraTimeBtn.classList.toggle('disabled', !this.state.powerups.time);
+            this.dom.hintBtn.classList.toggle('disabled', !this.state.powerups.hint);
+        }
+
+        updateHeartsAndScore(){
+            let lives;
+            if(this.state.mode === 'friend'){
+                lives = this.state.friend.current === 1 ? this.state.friend.player1.lives : this.state.friend.player2.lives;
+                this.dom.scoreSpan.innerText = this.state.friend.current === 1 ? this.state.friend.player1.score : this.state.friend.player2.score;
+            } else if(this.state.mode === 'practice') {
+                lives = CONFIG.MAX_LIVES;
+                this.dom.scoreSpan.innerText = this.state.score;
+            } else {
+                lives = this.state.lives;
+                this.dom.scoreSpan.innerText = this.state.score;
+            }
+            const str = '❤️'.repeat(lives) + '🖤'.repeat(CONFIG.MAX_LIVES - lives);
+            this.dom.heartsSpan.innerText = str;
+        }
+
+        updateStreak(){
+            if(this.state.streak > 0){
+                this.dom.streakDisplay.style.display = 'block';
+                this.dom.streakDisplay.textContent = `🔥 ${this.state.streak}`;
+            } else this.dom.streakDisplay.style.display = 'none';
+        }
+
+        updateTurnBadge(){
+            if(this.state.mode === 'friend'){
+                this.dom.playerTurnBadge.style.display = 'block';
+                const name = this.state.friend.current === 1 ? this.state.friend.player1.name : this.state.friend.player2.name;
+                this.dom.playerTurnBadge.textContent = `👤 دور ${name}`;
+            } else {
+                this.dom.playerTurnBadge.style.display = 'none';
+            }
+        }
+
+        endGame(){
+            this.timer.clearAll();
+            this.showScreen('end');
+            const duration = Math.floor((Date.now() - this.state.gameStartTimestamp) / 1000);
+            let resultHTML = '', stars = '';
+
+            if(this.state.mode === 'friend'){
+                const p1 = this.state.friend.player1, p2 = this.state.friend.player2;
+                const winner = p1.score > p2.score ? p1.name : (p2.score > p1.score ? p2.name : 'تعادل');
+                resultHTML = `<div>${p1.name}: ${p1.score}  |  ${p2.name}: ${p2.score}</div><div style="color:gold;">🏆 ${winner}</div>`;
+            } else {
+                resultHTML = `نتيجتك: ${this.state.score}`;
+                const max = this.state.currentQuestions.length * CONFIG.SCORE_PER_QUESTION;
+                const pct = max > 0 ? (this.state.score / max) * 100 : 0;
+                stars = pct >= 90 ? '⭐⭐⭐⭐⭐' : pct >= 75 ? '⭐⭐⭐⭐' : pct >= 60 ? '⭐⭐⭐' : pct >= 40 ? '⭐⭐' : '⭐';
+            }
+
+            document.getElementById('finalResultContainer').innerHTML = resultHTML;
+            document.getElementById('starsRating').innerHTML = stars;
+
+            const totalAnswered = this.state.correctCount + this.state.wrongCount;
+            const acc = totalAnswered > 0 ? Math.round((this.state.correctCount / totalAnswered) * 100) : 0;
+            document.getElementById('gameStatsContainer').innerHTML = `✅ صحيحة: ${this.state.correctCount} &nbsp; ❌ خاطئة: ${this.state.wrongCount}<br>⏭️ تخطي: ${this.state.skipCount} &nbsp; 🎯 الدقة: ${acc}%<br>⏱️ الوقت: ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`;
+            this.renderLeaderboard();
+            if(this.state.mode !== 'practice' && stars.includes('⭐⭐⭐')) launchConfetti();
+        }
+
+        resetToStart(){
+            this.timer.clearAll();
+            this.state.reset();
+            this.updatePowerupUI();
+            this.showScreen('start');
+            this.renderLeaderboard();
+        }
+
+        saveScore(){
+            const name = document.getElementById('playerNameForLeaderboard').value.trim();
+            if(!name) { alert('أدخل اسمك'); return; }
+            const entry = { name, score: this.state.score, mode: this.state.mode, date: new Date().toLocaleDateString('ar-EG') };
+            this.state.leaderboard.push(entry);
+            this.state.leaderboard.sort((a, b) => b.score - a.score);
+            if(this.state.leaderboard.length > CONFIG.LEADERBOARD_MAX) this.state.leaderboard = this.state.leaderboard.slice(0, CONFIG.LEADERBOARD_MAX);
+            this.state.saveLeaderboard();
+            this.renderLeaderboard();
+            alert('🌟 تم حفظ النتيجة! 🌟');
+        }
+
+        shareResult(){
+            const text = `تحدي النحو 4 ابتدائي: حصلت على ${this.state.score} نقطة! هل تستطيع التغلب علي؟ 🐼`;
+            if(navigator.share) navigator.share({ title: 'تحدي النحو 4', text });
+            else prompt('انسخ الرابط:', window.location.href);
+        }
+
+        renderLeaderboard(){
+            const list = document.getElementById('leaderboardList');
+            if(!this.state.leaderboard.length){
+                list.innerHTML = '<p>لا توجد نتائج بعد. كن أول بطل! 🏅</p>';
+                return;
+            }
+            list.innerHTML = this.state.leaderboard.map(e => 
+                `<div style="display:flex; justify-content:space-between;"><span>${escapeHTML(e.name)}</span><span>${e.score} ⭐</span></div>`
+            ).join('');
+        }
+
+        toggleTeacherPanel(){
+            const panel = document.getElementById('teacherPanel');
+            if(panel.style.display === 'none' || panel.style.display === ''){
+                let html = '<h3>📚 جميع أسئلة النحو</h3><input type="text" id="teacherSearchInput" placeholder="ابحث عن سؤال..." class="teacher-search"><div id="teacherQuestionsList" style="max-height:250px; overflow:auto;"></div>';
+                panel.innerHTML = html;
+                const renderFiltered = (filter = '') => {
+                    const filtered = this.baseQuestions.filter(q => q.q.includes(filter) || (q.type === 'mcq' && q.o.join(' ').includes(filter)));
+                    const listDiv = document.getElementById('teacherQuestionsList');
+                    listDiv.innerHTML = filtered.map((q, idx) => {
+                        let answerText = q.type === 'mcq' ? q.o[q.a] : (q.a ? 'صواب' : 'خطأ');
+                        let extra = q.hint ? `<br><small>📝 ${escapeHTML(q.hint)}</small>` : '';
+                        return `<p style="border-bottom:1px solid #333; padding:8px 0;"><b>${idx+1}- ${escapeHTML(q.q)}</b><br>✅ ${escapeHTML(answerText)}${extra}</p>`;
+                    }).join('');
+                };
+                renderFiltered();
+                document.getElementById('teacherSearchInput').addEventListener('input', (e) => renderFiltered(e.target.value));
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        enableKeyboardShortcuts(){
+            document.addEventListener('keydown', (e) => {
+                if(this.state.answered || this.dom.gameScreen.classList.contains('hidden')) return;
+                const q = this.state.currentQuestions[this.state.qIndex];
+                if(q.type === 'mcq'){
+                    const num = parseInt(e.key);
+                    if(num >= 1 && num <= q.o.length){
+                        e.preventDefault();
+                        this.checkMCQ(num - 1);
+                    }
+                } else {
+                    if(e.key === 'ArrowLeft' || e.key === '1'){
+                        e.preventDefault();
+                        this.handleTF(true);
+                    } else if(e.key === 'ArrowRight' || e.key === '0'){
+                        e.preventDefault();
+                        this.handleTF(false);
+                    }
+                }
+                if(e.key === ' ' || e.key === 'Space'){
+                    e.preventDefault();
+                    this.skipQuestion();
+                }
+            });
+        }
+    }
+
+    const state = new GameState();
+    const game = new GameEngine(state);
+})();
+</script>
+</body>
+</html>
